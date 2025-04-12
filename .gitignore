@@ -1,3 +1,7 @@
 .idea/
 
+# TODO: Under Coding
+Coding/*/*/out/
+Coding/*/*/*.iml
+
 .DS_Store
