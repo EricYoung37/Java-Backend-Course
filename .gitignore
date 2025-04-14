@@ -1,3 +1,6 @@
 .idea/
 
+Coding/*/*/out/
+Coding/*/*/*.iml
+
 .DS_Store
