@@ -299,7 +299,7 @@ class ShapeFactory {
 }
 
 // Usage
-public class FactoryPatternDemo {
+public class Main {
     public static void main(String[] args) {
         Shape shape1 = ShapeFactory.getShape("circle");
         shape1.draw();  // Output: Drawing a Circle
