@@ -673,6 +673,212 @@ public class YieldExample {
 ## Question 13
 > *What is a thread pool?*
 > 
-> *Types of thread pools.*
-> 
 > *What is the task queue in a thread pool?*
+> 
+> *Types of thread pools.*
+
+### What is a Thread Pool?
+A thread pool in Java is a collection of worker threads that are managed by the `ExecutorService` framework.
+The purpose of a thread pool is to **manage** and **reuse** a fixed number of threads to execute a large number of tasks.
+
+### Task queue
+A task queue in a thread pool refers to the queue that holds tasks that are waiting to be executed.
+When a task is submitted to the `ExecutorService`, it is placed in the task queue, and worker threads take tasks from the queue and execute them.
+
+### Types of Thread Pools
+| **Type**                   | **Method**                            | **Thread Count**          | **Task Handling**                               | **Use Case**                                  |
+|----------------------------|---------------------------------------|---------------------------|-------------------------------------------------|-----------------------------------------------|
+| **Fixed Thread Pool**      | `Executors.newFixedThreadPool(n)`     | Fixed                     | Extra tasks are queued                          | Stable number of concurrent tasks             |
+| **Cached Thread Pool**     | `Executors.newCachedThreadPool()`     | Dynamic (grows as needed) | Tasks executed immediately if threads available | Many short-lived asynchronous tasks           |
+| **Single Thread Executor** | `Executors.newSingleThreadExecutor()` | 1                         | Tasks are queued and executed sequentially      | Ensures tasks execute one at a time, in order |
+| **Scheduled Thread Pool**  | `Executors.newScheduledThreadPool(n)` | Fixed                     | Supports delayed and periodic execution         | Timer, scheduled tasks                        |
+
+
+## Question 14
+> *Which library is used to create a thread pool?*
+> 
+> *Which interface provides the main functionality of thread pools?*
+
+`java.util.concurrent` is the standard library used to create and manage thread pools.
+
+The key interface that provides the core thread pool functionality is `ExecutorService`.
+
+
+## Question 15
+> *How to submit a task to a thread pool?*
+
+See [Question 3 - Using Thread Pool](#4-using-thread-pool-executorservice)
+
+
+## Question 16
+> *Advantages of thread pools*
+
+1. **Improved Performance**
+
+    Thread pools reuse threads, reducing the overhead of creating and destroying threads repeatedly.
+
+2. **Better Resource Management**
+
+    Thread pools can limit the number of threads to avoid system overload or spawn threads dynamically.
+
+3. **Task Queueing**
+
+    Tasks are queued and executed when threads are available, ensuring organized task handling.
+
+4. **Simplified Thread Management**
+
+    Thread lifecycle management is handled automatically, reducing manual effort in managing threads.
+
+5. **Supports Advanced Features**
+
+    Thread pools support advanced features like `Future` and `Callable` for asynchronous task execution and results.
+
+6. **Graceful Shutdown**
+
+   Thread pools can be shut down cleanly using `shutdown()` or `shutdownNow()`, ensuring no resource leaks.
+
+
+## Question 17
+> *`shutdown()` vs `shutdownNow()`*
+
+| **Method**          | **Description**                                                  | **Running Tasks**          | **Waiting Tasks**                                  |
+|---------------------|------------------------------------------------------------------|----------------------------|----------------------------------------------------|
+| **`shutdown()`**    | Initiates graceful shutdown, no new tasks are accepted.          | Will complete execution.   | Will finish once running tasks complete.           |
+| **`shutdownNow()`** | Immediately attempts to stop tasks, returns tasks still waiting. | Interrupted (if possible). | Returned as a `List<Runnable>` of remaining tasks. |
+
+
+## Question 18
+> *What are atomic classes?*
+> 
+> *Types of atomic classes.*
+> 
+> *Code examples with some main methods.*
+
+### What Are Atomic Classes?
+Atomic classes are part of the `java.util.concurrent.atomic` package, and they provide thread-safe operations for primitive types and object references.
+
+### Types of Atomic Classes
+| **Class**                    | **Description**                                                |
+|------------------------------|----------------------------------------------------------------|
+| `AtomicBoolean`              | Provides an atomic `boolean` value.                            |
+| `AtomicInteger`              | Provides an atomic `int` value.                                |
+| `AtomicLong`                 | Provides an atomic `long` value.                               |
+| `AtomicIntegerArray`         | Provides an atomic array of `int` values.                      |
+| `AtomicLongArray`            | Provides an atomic array of `long` values.                     |
+| `AtomicReference<T>`         | Provides an atomic reference to an object of type `T`.         |
+| `AtomicReferenceArray<T>`    | Provides an atomic array of references to objects of type `T`. |
+| `AtomicMarkableReference<T>` | Provides an atomic reference with a markable boolean flag.     |
+| `AtomicStampedReference<T>`  | Provides an atomic reference with a stamp (version number).    |
+
+<details>
+<summary>Code Examples with Some Main Methods</summary>
+
+#### Primitive Type Example - `AtomicInteger`
+```java
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class AtomicIntegerExample {
+public static void main(String[] args) {
+AtomicInteger atomicInt = new AtomicInteger(0);
+
+        // Increment by 1
+        atomicInt.incrementAndGet();
+        System.out.println("After increment: " + atomicInt.get());
+
+        // Decrement by 1
+        atomicInt.decrementAndGet();
+        System.out.println("After decrement: " + atomicInt.get());
+
+        // Add a value (e.g., 10)
+        atomicInt.addAndGet(10);
+        System.out.println("After adding 10: " + atomicInt.get());
+
+        // Set a new value
+        atomicInt.set(50);
+        System.out.println("After setting 50: " + atomicInt.get());
+    }
+}
+```
+
+#### Reference Type Example - `AtomicReference`
+```java
+import java.util.concurrent.atomic.AtomicReference;
+
+public class AtomicReferenceExample {
+    public static void main(String[] args) {
+        AtomicReference<String> atomicReference = new AtomicReference<>("Initial");
+
+        // Get current value
+        System.out.println("Current value: " + atomicReference.get());
+
+        // Compare and set new value if current value matches
+        boolean isUpdated = atomicReference.compareAndSet("Initial", "Updated");
+        System.out.println("Was the value updated? " + isUpdated);
+        System.out.println("Current value after update: " + atomicReference.get());
+    }
+}
+```
+</details>
+
+
+## Question 19
+> *Concurrent Collections*
+
+| **Concurrent Data Structure** | **Description**                                                                                                                                                                                       |
+|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ConcurrentHashMap`           | A thread-safe variant of `HashMap`. Allows concurrent read and write operations on different segments without locking the entire map.                                                                 |
+| `CopyOnWriteArrayList`        | A thread-safe version of `ArrayList` where mutative operations create a copy of the underlying array to ensure consistency.                                                                           |
+| `BlockingQueue`               | Interface for thread-safe queues that support blocking operations like `take()`, `put()`, `poll()`, and `offer()`. Includes `ArrayBlockingQueue`, `LinkedBlockingQueue`, and `PriorityBlockingQueue`. |
+| `LinkedBlockingQueue`         | A blocking queue with an optional capacity limit that blocks threads when the queue is full or empty.                                                                                                 |
+| `ArrayBlockingQueue`          | A blocking queue with a fixed capacity. Operations block when the queue is full or empty.                                                                                                             |
+| `ConcurrentLinkedQueue`       | A non-blocking, thread-safe queue that uses lock-free algorithms for basic operations like `add` and `remove`.                                                                                        |
+| `ConcurrentSkipListMap`       | A thread-safe variant of `TreeMap` that uses a skip list for efficient ordered operations.                                                                                                            |
+| `ConcurrentSkipListSet`       | A thread-safe variant of `TreeSet` implemented using a skip list, ensuring ordered and concurrent access.                                                                                             |
+
+
+## Question 20
+> *Types of locks and their advantages.*
+
+| **Lock Type**       | **Description**                                                                                                                                                                   | **Advantages**                                                                                                                                                                                                                                                                                   |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Reentrant Lock**  | A lock that allows the thread holding it to re-enter and acquire the lock again. It provides methods like `lock()`, `unlock()`, and `tryLock()`.                                  | • Fairness (can ensure the longest waiting thread gets the lock).<br>• **Prevents deadlock when a thread needs to acquire the lock multiple times.**<br>• Non-blocking lock attempts using `tryLock()`.                                                                                          |
+| **Read/Write Lock** | A lock that allows multiple threads to read concurrently but ensures only one thread can write at a time. `ReentrantReadWriteLock` is a typical implementation.                   | • Allows **concurrent reads** for high-performance read-heavy workloads.<br>• Ensures exclusive access for write operations.<br>• Increased throughput for reads.<br>• Fairness can be enabled, preventing thread starvation.                                                                    |
+| **Stamped Lock**    | A lock that provides three modes: write, read, and optimistic read. Optimistic reads do not require locking unless a write occurs. It is designed for high-performance scenarios. | • **Optimistic reads** to **avoid locking** and improve **performance**.<br>• Non-blocking reads with `tryOptimisticRead()`.<br>• Better scalability for read-heavy workloads.<br>• Reduces contention by allowing optimistic reads.<br>• Provides traditional write locks for exclusive access. |
+
+
+## Question 21
+> *`Future` vs `CompletableFuture`*
+> 
+> *Main methods for `CompletableFuture`*
+
+`Future` is an **interface** that represents the result of an asynchronous computation.
+It provides methods for checking if the computation is complete, waiting for its completion, and retrieving the result.
+
+`CompletableFuture` is an implementing **class** of `Future` that supports a wide range of asynchronous operations, error handling, and task composition.
+
+<details>
+<summary>Main Methods</summary>
+
+| **Method**                                                        | **Description**                                                                                                                |
+|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| `supplyAsync(Supplier<U> supplier)`                               | Starts an asynchronous task that returns a result (`U`). Returns a `CompletableFuture<U>`.                                     |
+| `runAsync(Runnable runnable)`                                     | Starts an asynchronous task that does not return a result. Returns a `CompletableFuture<Void>`.                                |
+| `thenApply(Function<T, U> fn)`                                    | Returns a new `CompletableFuture` that applies the given function to the result of the original task.                          |
+| `thenAccept(Consumer<T> action)`                                  | Returns a new `CompletableFuture` that executes the provided action on the result of the original task.                        |
+| `thenRun(Runnable action)`                                        | Returns a new `CompletableFuture` that runs the provided action when the original task is completed.                           |
+| `thenCombine(CompletableFuture<U> other, BiFunction<T, U, V> fn)` | Combines the results of two `CompletableFuture`s using the provided function. Returns a `CompletableFuture<V>`.                |
+| `thenCompose(Function<T, CompletableFuture<U>> fn)`               | Returns a new `CompletableFuture` that applies a function to the result of the current task and flattens the result.           |
+| `allOf(CompletableFuture<?>... cfs)`                              | Returns a new `CompletableFuture<Void>` that completes when all of the given `CompletableFuture`s complete.                    |
+| `anyOf(CompletableFuture<?>... cfs)`                              | Returns a new `CompletableFuture<Object>` that completes when any of the given `CompletableFuture`s completes.                 |
+| `exceptionally(Function<Throwable, ? extends T> fn)`              | Handles exceptions by applying a function and returning a new result if the task completes exceptionally.                      |
+| `handle(BiFunction<T, Throwable, U> fn)`                          | Handles both normal and exceptional completion. Returns a new `CompletableFuture<U>` after processing the result or exception. |
+</details>
+
+
+## Question 23
+
+
+## Question 24
+
+
+## Question 25
