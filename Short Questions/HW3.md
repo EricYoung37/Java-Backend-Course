@@ -876,9 +876,195 @@ It provides methods for checking if the computation is complete, waiting for its
 
 
 ## Question 23
+> *Create two threads. One prints 1, 3, 5, 7, 9, and the other prints 2, 4, 6, 8, 10.*
+> 
+> *One solution uses `synchronized`, `wait`, `notify`. The other uses `ReentrantLock`, `Condition`.*
+
+### Using `synchronized`, `wait`, `notify`
+```java
+public class OddEvenSync {
+    private final Object lock = new Object();
+    private boolean oddTurn = true;
+
+    public void printOdd() {
+        for (int i = 1; i <= 9; i += 2) {
+            synchronized (lock) {
+                while (!oddTurn) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {}
+                }
+                System.out.println("Odd: " + i);
+                oddTurn = false;
+                lock.notify();
+            }
+        }
+    }
+
+    public void printEven() {
+        for (int i = 2; i <= 10; i += 2) {
+            synchronized (lock) {
+                while (oddTurn) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {}
+                }
+                System.out.println("Even: " + i);
+                oddTurn = true;
+                lock.notify();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        OddEvenSync obj = new OddEvenSync();
+        Thread t1 = new Thread(obj::printOdd);
+        Thread t2 = new Thread(obj::printEven);
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+### Using `ReentrantLock`, `Condition`
+```java
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class OddEvenLock {
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
+    private boolean oddTurn = true;
+
+    public void printOdd() {
+        for (int i = 1; i <= 9; i += 2) {
+            lock.lock();
+            try {
+                while (!oddTurn) {
+                    condition.await();
+                }
+                System.out.println("Odd: " + i);
+                oddTurn = false;
+                condition.signal();
+            } catch (InterruptedException e) {
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+    public void printEven() {
+        for (int i = 2; i <= 10; i += 2) {
+            lock.lock();
+            try {
+                while (oddTurn) {
+                    condition.await();
+                }
+                System.out.println("Even: " + i);
+                oddTurn = true;
+                condition.signal();
+            } catch (InterruptedException e) {
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        OddEvenLock obj = new OddEvenLock();
+        Thread t1 = new Thread(obj::printOdd);
+        Thread t2 = new Thread(obj::printEven);
+        t1.start();
+        t2.start();
+    }
+}
+```
 
 
 ## Question 24
+> *Create three threads. One outputs 1 to 10, one outputs 11 to 20, and one outputs 21 to 22.
+> The threads don't run in sequence.*
+
+```java
+public class ThreeThreads {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(printRange(1, 10, "Thread 1"));
+        Thread t2 = new Thread(printRange(11, 20, "Thread 2"));
+        Thread t3 = new Thread(printRange(21, 22, "Thread 3"));
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+
+    private static Runnable printRange(int start, int end, String threadName) {
+        return () -> {
+            for (int i = start; i <= end; i++) {
+                System.out.println(threadName + ": " + i);
+                try {
+                    Thread.sleep(500); // tiny delay
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        };
+    }
+}
+```
 
 
 ## Question 25
+### Part 1
+> *Use `CompletableFuture` to asynchronously get the sum and product of two integers,
+> and print the results.*
+
+```java
+import java.util.concurrent.CompletableFuture;
+
+public class AsyncSumProduct {
+   public static void main(String[] args) {
+      int num1 = 5;
+      int num2 = 10;
+
+      System.out.println("Using numbers: " + num1 + " and " + num2);
+
+      CompletableFuture<Integer> sumFuture = CompletableFuture.supplyAsync(() -> sum(num1, num2));
+      CompletableFuture<Integer> productFuture = CompletableFuture.supplyAsync(() -> product(num1, num2));
+
+      sumFuture.thenAccept(sum -> {
+         System.out.println("Sum: " + sum);
+      });
+
+      productFuture.thenAccept(product -> {
+         System.out.println("Product: " + product);
+      });
+
+      // Wait for both computations to complete before finishing the program
+      CompletableFuture.allOf(sumFuture, productFuture).join();
+   }
+
+   private static int sum(int a, int b) {
+      return a + b;
+   }
+
+   private static int product(int a, int b) {
+      return a * b;
+   }
+}
+```
+
+### Part 2
+> *Find a public API with at least three endpoints.
+> Use `CompletableFuture` to fetch data from each endpoint and merge the fetched data.* 
+> 
+> Using [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
+
+See [Coding/HW3/Question25/src/AsyncJsonFetcher.java](../Coding/HW3/Question25/src/AsyncJsonFetcher.java)
+
+
+### Part 3
+> *For part 2, implement exception handling. If an exception occurs during any API call,
+> return a default value and log the exception information.*
+
+See [Coding/HW3/Question25/src/AsyncJsonFetcher2.java](../Coding/HW3/Question25/src/AsyncJsonFetcher2.java)
