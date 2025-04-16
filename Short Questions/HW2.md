@@ -6,6 +6,8 @@ See directory [Coding/HW2/Question1](../Coding/HW2/Question1).
 
 
 ## Question 2
+> Checked Exception **vs** Unchecked Exception
+
 ### Comparison
 | Feature               | Checked Exception             | Unchecked Exception                                                        |
 |-----------------------|-------------------------------|----------------------------------------------------------------------------|
@@ -58,6 +60,8 @@ public class Main {
 
 
 ## Question 3
+> `catch` and `finally` blocks
+
 Java allows **multiple** `catch` blocks but **only one** `finally` block per `try`.
 ```java
 public class Main {
@@ -81,11 +85,15 @@ public class Main {
 
 
 ## Question 4
+> The final result for `catch` and `finally` blocks.
+
 When both `catch` and `finally` have return statements, the return value from `finally` takes precedence
 and overrides any return from `try` or `catch`.
 
 
 ## Question 5
+> `throw` **vs** `throws`
+
 | Feature        | `throw`                      | `throws`                                     |
 |----------------|------------------------------|----------------------------------------------|
 | What it does   | Actually throws an exception | Declares a method **might** throw exceptions |
@@ -95,7 +103,9 @@ and overrides any return from `try` or `catch`.
 
 
 ## Question 6
-Java exception hierarchy and `catch` blocking ordering rules:
+> `catch` blocking ordering rules
+
+`catch` blocking ordering rules:
 1. Checks `catch` **top to bottom** and uses the **first match**.
 2. Catching `Exception` too early blocks all the remaining exceptions.
 
@@ -106,6 +116,8 @@ The oder of `catch block` in this question's example is correct:
 
 
 ## Question 7
+> `Optional`
+
 `Optional` is a container object used to represent **a value that may or may not be present**.
 It's introduced in Java 8 to deal with null values in a more expressive and safer way.
 Using `Optional` helps to avoid **NullPointerException (NPE)** by enforcing an explicit check for the presence of a value,
@@ -133,6 +145,7 @@ public class Main {
 
 
 ## Question 8
+> Creational Design Patterns and Structure Design Patterns
 
 ### Creational Design Patterns
 Creational design patterns are used to abstract the instantiation process, ensuring that objects are created in a way that suits the context.
@@ -241,6 +254,7 @@ Common structural patterns include:
 
 
 ## Question 9
+> Singleton Pattern, Factory Pattern, Builder Pattern
 
 ### Singleton
 ```java
@@ -374,6 +388,7 @@ public class Main {
 
 
 ## Question 10
+> SOLID Principles and Open-Closed Principle (OCP)
 
 ### SOLID Principles
 The SOLID principles are a set of five design principles intended to make software more maintainable, scalable, and robust.
@@ -388,13 +403,14 @@ The SOLID principles are a set of five design principles intended to make softwa
 
 
 #### Open-Closed Principle (OCP)
-> Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.
+> *Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.*
 
 This means that existing code should not be changed, but the behavior should be extendable to accommodate new requirements. This reduces the risk of introducing bugs in existing functionality and promotes maintainability.
 
 
 ## Question 11
-**Liskov Substitution Principle (LSP)**
-> If class B is a subtype of class A, then object of type A may be substituted with any object of type B.
+> Liskov Substitution Principle (LSP)
+
+> *If class B is a subtype of class A, then object of type A may be substituted with any object of type B.*
 
 This means that if the object of type A can do something, the object of type B can also do it.

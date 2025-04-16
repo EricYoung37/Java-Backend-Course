@@ -22,6 +22,8 @@
    
    Also, check "Use module compile output path" for `Question1` in project structure.
 
+   Git is enabled by the parent project. **Don't** use Git for this module.
+
 2. Import `Question1` as a module into the root repository.
 
    Otherwise, Java files under `Quesiton1` are not runnable (IDEA won't give run buttons)

@@ -2,6 +2,11 @@
 **Author: M.Y. Yang**
 
 ## Question 1
+> 3/4 Fundamental conecpts of OOP
+> * Encapsulation
+> * Polymorphism
+> * Inheritance
+
 ```java
 // 1. Encapsulation
 class Animal {
@@ -93,6 +98,8 @@ public class Main {
 
 
 ## Question 2
+> Wrapper classes
+
 In Java, wrapper classes are object representations of the primitive data types.
 Each wrapper class wraps a primitive value inside an object.
 
@@ -125,6 +132,7 @@ Wrappers allow you to represent "no value" (null) — useful in databases, APIs,
 
 
 ## Question 3
+> `HashMap` **vs** `HashTable`
 
 | Feature                    | `HashMap`                                          | `Hashtable`                                  |
 |----------------------------|----------------------------------------------------|----------------------------------------------|
@@ -137,6 +145,7 @@ Wrappers allow you to represent "no value" (null) — useful in databases, APIs,
 
 
 ## Question 4
+> String pool and string immunity
 
 ### What is String Pool in Java
 The **String Pool** (also called the **String Intern Pool**) is a special memory area inside the **Java heap** that stores **unique String literals**.
@@ -174,6 +183,8 @@ If strings could change, they can't be reused safely from the pool.
 
 
 ## Question 5
+> Garbage collection
+
 Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **automatically reclaims memory** by removing objects that are **no longer reachable or needed**.
 
 **Types of GC:**
@@ -189,6 +200,7 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 6
+> Access modifiers
 
 | Access Modifier | Scope                                                                                   |
 |-----------------|-----------------------------------------------------------------------------------------|
@@ -199,6 +211,7 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 7
+> `final` keyword
 
 | Modifier Context     | Purpose                                                          |
 |----------------------|------------------------------------------------------------------|
@@ -208,6 +221,7 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 8
+> `static` keyword
 
 | **Usage**                     | **Description**                                                                                                                          | **Example**                                                                        |
 |-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
@@ -217,6 +231,7 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 9
+> Overriding **vs** Overloading
 
 | **Feature**           | **Overloading**                                               | **Overriding**                                                                 |
 |-----------------------|---------------------------------------------------------------|--------------------------------------------------------------------------------|
@@ -229,6 +244,8 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 10
+> Method signature and polymorphism
+
 Java method signature consists of:
 - method name
 - parameter types (in order)
@@ -239,6 +256,8 @@ Java method signature consists of:
 
 
 ## Question 11
+> `super` **vs** `this`
+
 | **Keyword** | **Refers To**                  | **Used For**                                                                      | **Context of Use**               |
 |-------------|--------------------------------|-----------------------------------------------------------------------------------|----------------------------------|
 | `this`      | **Current** class object       | Accessing current class members, resolving naming conflicts, constructor chaining | Within the same class            |
@@ -246,6 +265,7 @@ Java method signature consists of:
 
 
 ## Question 12
+> `equals()` and `hashCode()`
 
 ### `equals()`
 The default implementation compares memory addresses (i.e., reference equality) of two objects.
@@ -265,6 +285,8 @@ The default implementation returns an integer value for the object as a hash cod
 
 
 ## Question 13
+> Java load sequence
+
 The Java load sequence (also called the **class loading and initialization sequence**) describes how the **JVM loads, links, and initializes classes** before they are used at runtime.
 
 ```text
@@ -309,10 +331,14 @@ The Java load sequence (also called the **class loading and initialization seque
 
 
 ## Question 14
+> Polymorphism
+
 See questions 1 and 9.
 
 
 ## Question 15
+> Encapsulation
+
 Encapsulation refers to bundling data (variables) and methods that operate on that data into a single unit, known as a class.
 
 | **Benefit**                  | **Explanation**                                                      |
@@ -327,6 +353,7 @@ For example implementation, see question 1.
 
 
 ## Question 16
+> Interface **vs** Abstract Class
 
 | **Feature**          | **Interface**                                                   | **Abstract Class**                                  |
 |----------------------|-----------------------------------------------------------------|-----------------------------------------------------|

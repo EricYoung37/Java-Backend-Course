@@ -2,12 +2,12 @@
 **Author: M.Y. Yang**
 
 ## Question 2
-> *Thread-safe singleton class*
+> Thread-safe singleton class
 
 See [HW2 Question9 - Singleton](HW2.md#singleton)
 
 ## Question 3
-> *Ways to create threads*
+> Ways to create threads
 
 ### 1. Using `Thread`
 #### Extend `Thread`
@@ -204,7 +204,7 @@ public class Main {
 
 
 ## Question 4
-> *`Runnable` vs `Callable`*
+> `Runnable` **vs** `Callable`
 
 | Feature                 | `Runnable`                                   | `Callable<V>`                      |
 |-------------------------|----------------------------------------------|------------------------------------|
@@ -215,7 +215,7 @@ public class Main {
 
 
 ## Question 5
-> *`start()` vs `run()`*
+> `start()` **vs** `run()`
 
 | Aspect                | `start()` | `run()`                     |
 |-----------------------|-----------|-----------------------------|
@@ -224,7 +224,7 @@ public class Main {
 
 
 ## Question 6
-> *Which is the better way to create a thread: `Thread` or `Runnable`?*
+> Which is the better way to create a thread: `Thread` or `Runnable`?
 
 The `Runnable` interface is generally the preferred approach due to its flexibility, reusability, and compatibility with modern concurrency utilities like `ExecutorService`.
 
@@ -237,7 +237,7 @@ The `Runnable` interface is generally the preferred approach due to its flexibil
 
 
 ## Question 7
-> *Thread states*
+> Thread states
 
 | **State**         | **Description**                                                                 |
 |-------------------|---------------------------------------------------------------------------------|
@@ -250,7 +250,7 @@ The `Runnable` interface is generally the preferred approach due to its flexibil
 
 
 ## Question 8
-> *Deadlock and possible solutions*
+> Deadlock and possible solutions
 
 Deadlock describes a situation where two or more threads are blocked forever, waiting for each other.
 
@@ -434,7 +434,7 @@ Expected outputs (**no** deadlock in all cases):
 
 
 ## Question 9
-> *Communication between threads*
+> Communication between threads
 
 ### Use `Synchronized` and `wait()`, `notify()`, `notifyAll()`
 ```java
@@ -620,7 +620,7 @@ class VolatileExample {
 
 
 ## Question 10
-> *Class lock vs Object lock*
+> Class lock **vs** Object lock
 
 | Aspect               | Object Lock (`this`)              | Class Lock (`MyClass.class`)           |
 |----------------------|-----------------------------------|----------------------------------------|
@@ -631,13 +631,13 @@ class VolatileExample {
 
 
 ## Question 11
-> *`join()`*
+> `join()`
 
 The `join()` method in Java is used to **pause the current thread** until the thread on which `join()` is called completes its execution.
 
 
 ## Question 12
-> *`yield()`*
+> `yield()`
 
 | Behavior                    | Description                                                                                          |
 |-----------------------------|------------------------------------------------------------------------------------------------------|
@@ -671,11 +671,11 @@ public class YieldExample {
 
 
 ## Question 13
-> *What is a thread pool?*
+> What is a thread pool?
 > 
-> *What is the task queue in a thread pool?*
+> What is the task queue in a thread pool?
 > 
-> *Types of thread pools.*
+> Types of thread pools.
 
 ### What is a Thread Pool?
 A thread pool in Java is a collection of worker threads that are managed by the `ExecutorService` framework.
@@ -695,9 +695,9 @@ When a task is submitted to the `ExecutorService`, it is placed in the task queu
 
 
 ## Question 14
-> *Which library is used to create a thread pool?*
+> Which library is used to create a thread pool?
 > 
-> *Which interface provides the main functionality of thread pools?*
+> Which interface provides the main functionality of thread pools?
 
 `java.util.concurrent` is the standard library used to create and manage thread pools.
 
@@ -705,13 +705,13 @@ The key interface that provides the core thread pool functionality is `ExecutorS
 
 
 ## Question 15
-> *How to submit a task to a thread pool?*
+> How to submit a task to a thread pool?
 
 See [Question 3 - Using Thread Pool](#4-using-thread-pool-executorservice)
 
 
 ## Question 16
-> *Advantages of thread pools*
+> Advantages of thread pools
 
 1. **Improved Performance**
 
@@ -739,7 +739,7 @@ See [Question 3 - Using Thread Pool](#4-using-thread-pool-executorservice)
 
 
 ## Question 17
-> *`shutdown()` vs `shutdownNow()`*
+> `shutdown()` **vs** `shutdownNow()`
 
 | **Method**          | **Description**                                                  | **Running Tasks**          | **Waiting Tasks**                                  |
 |---------------------|------------------------------------------------------------------|----------------------------|----------------------------------------------------|
@@ -748,11 +748,11 @@ See [Question 3 - Using Thread Pool](#4-using-thread-pool-executorservice)
 
 
 ## Question 18
-> *What are atomic classes?*
+> What are atomic classes?
 > 
-> *Types of atomic classes.*
+> Types of atomic classes.
 > 
-> *Code examples with some main methods.*
+> Code examples with some main methods.
 
 ### What Are Atomic Classes?
 Atomic classes are part of the `java.util.concurrent.atomic` package, and they provide thread-safe operations for primitive types and object references.
@@ -822,7 +822,7 @@ public class AtomicReferenceExample {
 
 
 ## Question 19
-> *Concurrent Collections*
+> Concurrent Collections
 
 | **Concurrent Data Structure** | **Description**                                                                                                                                                                                       |
 |-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -837,7 +837,7 @@ public class AtomicReferenceExample {
 
 
 ## Question 20
-> *Types of locks and their advantages.*
+> Types of locks and their advantages.
 
 | **Lock Type**       | **Description**                                                                                                                                                                   | **Advantages**                                                                                                                                                                                                                                                                                   |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -847,9 +847,9 @@ public class AtomicReferenceExample {
 
 
 ## Question 21
-> *`Future` vs `CompletableFuture`*
+> `Future` **vs** `CompletableFuture`
 > 
-> *Main methods for `CompletableFuture`*
+> Main methods for `CompletableFuture`
 
 `Future` is an **interface** that represents the result of an asynchronous computation.
 It provides methods for checking if the computation is complete, waiting for its completion, and retrieving the result.
@@ -876,9 +876,9 @@ It provides methods for checking if the computation is complete, waiting for its
 
 
 ## Question 23
-> *Create two threads. One prints 1, 3, 5, 7, 9, and the other prints 2, 4, 6, 8, 10.*
+> Create two threads. One prints 1, 3, 5, 7, 9, and the other prints 2, 4, 6, 8, 10.
 > 
-> *One solution uses `synchronized`, `wait`, `notify`. The other uses `ReentrantLock`, `Condition`.*
+> One solution uses `synchronized`, `wait`, `notify`. The other uses `ReentrantLock`, `Condition`.
 
 ### Using `synchronized`, `wait`, `notify`
 ```java
@@ -983,8 +983,8 @@ public class OddEvenLock {
 
 
 ## Question 24
-> *Create three threads. One outputs 1 to 10, one outputs 11 to 20, and one outputs 21 to 22.
-> The threads don't run in sequence.*
+> Create three threads. One outputs 1 to 10, one outputs 11 to 20, and one outputs 21 to 22.
+> The threads' running sequence is random.
 
 ```java
 public class ThreeThreads {
@@ -1016,8 +1016,8 @@ public class ThreeThreads {
 
 ## Question 25
 ### Part 1
-> *Use `CompletableFuture` to asynchronously get the sum and product of two integers,
-> and print the results.*
+> Use `CompletableFuture` to asynchronously get the sum and product of two integers,
+> and print the results.
 
 ```java
 import java.util.concurrent.CompletableFuture;
@@ -1055,8 +1055,8 @@ public class AsyncSumProduct {
 ```
 
 ### Part 2
-> *Find a public API with at least three endpoints.
-> Use `CompletableFuture` to fetch data from each endpoint and merge the fetched data.* 
+> Find a public API with at least three endpoints.
+> Use `CompletableFuture` to fetch data from each endpoint and merge the fetched data.
 > 
 > Using [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
 
@@ -1064,7 +1064,7 @@ See [Coding/HW3/Question25/src/AsyncJsonFetcher.java](../Coding/HW3/Question25/s
 
 
 ### Part 3
-> *For part 2, implement exception handling. If an exception occurs during any API call,
-> return a default value and log the exception information.*
+> For part 2, implement exception handling. If an exception occurs during any API call,
+> return a default value and log the exception information.
 
 See [Coding/HW3/Question25/src/AsyncJsonFetcher2.java](../Coding/HW3/Question25/src/AsyncJsonFetcher2.java)
