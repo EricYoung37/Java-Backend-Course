@@ -1,6 +1,10 @@
-.idea/
+# Ignore all .idea folders anywhere in the repo
+**/.idea/
 
-Coding/*/*/out/
-Coding/*/*/*.iml
+# Ignore all out directories anywhere in the repo
+Coding/**/out/
+
+# Ignore all .iml files anywhere in the repo
+**/*.iml
 
 .DS_Store
