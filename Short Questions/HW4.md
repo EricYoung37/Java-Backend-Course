@@ -1060,11 +1060,11 @@ public class AsyncSumProduct {
 > 
 > Using [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
 
-See [Coding/HW3/Question25/src/AsyncJsonFetcher.java](../Coding/HW3/Question25/src/AsyncJsonFetcher.java)
+See [Coding/HW3/Question25/src/AsyncJsonFetcher.java](../Coding/HW4/Question25/src/AsyncJsonFetcher.java)
 
 
 ### Part 3
 > For part 2, implement exception handling. If an exception occurs during any API call,
 > return a default value and log the exception information.
 
-See [Coding/HW3/Question25/src/AsyncJsonFetcher2.java](../Coding/HW3/Question25/src/AsyncJsonFetcher2.java)
+See [Coding/HW3/Question25/src/AsyncJsonFetcher2.java](../Coding/HW4/Question25/src/AsyncJsonFetcher2.java)
