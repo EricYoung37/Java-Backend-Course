@@ -447,25 +447,138 @@ Provides additional configuration for an entity, e.g., table name.
 
 ### ◆ `@UniqueConstraint`
 
+Defines unique constraints on table columns.
+
+```java
+package com.chuwa.redbook.entity; // pay attention to the folder (package)
+
+// imports
+
+@Entity
+@Table(
+        name = "posts",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"title"})
+        }
+)
+public class Post {
+    // ...
+}
+```
 
 
 ### ◆ `@Id`
+
+Marks the primary key field.
+
+
 ### ◆ `@GeneratedValue`
+
+Provides generation strategy for a primary key.
 
 
 ### ◆ `@Column`
 
+Provides additional configuration for a field, e.g. column name.
+
+```java
+// package, imports
+
+@Entity
+@Table(name = "posts" /* other configs */ )
+public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+    
+    // ...
+}
+```
+
 
 ### ◆ `@OneToMany`
+
+Indicates `Current Entity : Annotated Field = 1 : N`.
+
+`mappedBy = {field_owned_by_the_other_entity}`
+
+```java
+// package, imports
+
+@Entity
+@Table(name = "posts" /* other configs */ )
+public class Post {
+    
+    // ...
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments = new HashSet<>();
+    
+    // post is a field owned (mapped) by the Comment entity
+}
+```
+
+
 ### ◆ `@ManyToOne`
+
+Indicates `Current Entity : Annotated Field = N : 1`.
+
+
 ### ◆ `@JoinColumn`
+
+Indicates a **foreign key**:
+a column (with `name`) in the current entity
+refers to a primary key in the reference entity (inferred by the field type).
+
+Usually used with `ManyToOne` or `@OneToOne`.
+
+```java
+// package, imports
+
+@Entity
+@Table(name = "comments")
+public class Comment {
+    
+    // ...
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+}
+```
+
+※ `@OneToMany(mappedBy)` in `Post` and `@JoinColumn` in `Comment`
+creates a **unidirectional** mapping from `Comment` to `Post` (one direction).
 
 
 ### ◆ `@CreationTimestamp`
+
+Marks a property as the creation timestamp of the containing entity.
+
+
 ### ◆ `@UpdateTimestamp`
 
+Marks a property as the update timestamp of the containing entity.
 
+```java
+// package, imports
 
+@Entity
+@Table(name = "posts" /* other configs */ )
+public class Post {
+    
+    // ...
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+}
+```
 
 
 ### ◆ `@Repository`
