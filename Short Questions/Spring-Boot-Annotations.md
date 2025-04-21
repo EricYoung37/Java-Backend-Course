@@ -45,7 +45,7 @@ public class RedbookApplication {
 
 Annotated **class** is a candidate for **auto-detection** when using annotation-based configuration and classpath scanning (`@ComponentScan`).
 
-Specializations: `@Configuration`, `@Controller`, `@Service`, `@Repository`.
+Specializations: `@Configuration`, `@Controller`, `@Service`, `@Repository`, `@ControllerAdvice`.
 
 
 ### ◆ `@Configuration`
@@ -604,9 +604,84 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 ## 5. Exception Handling
 
 ### ◆ `@ControllerAdvice`
+
+Declares `@ExceptionHandler`, `@InitBinder`, or `@ModelAttribute` methods to be **shared across** multiple `@Controller` classes
+(**all by default**).
+
+
 ### ◆ `@ExceptionHandler`
+
+Annotation for handling exceptions in specific handler **classes** and/or handler **methods**.
+
+```java
+package com.chuwa.redbook.exception;  // pay attention to the folder (package)
+
+// imports
+
+@ControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception,
+                                                                        WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
+                webRequest.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+    
+    // ...
+}
+```
+
+
 ### ◆ `@ResponseStatus`
 
+Marks a **method** or **exception class** with the status `code()` and `reason()` that should be returned.
+
+```java
+package com.chuwa.redbook.exception;  // pay attention to the folder (package)
+
+// @ResponseStatus can be removed if @ControllerService is used instead.
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+    private String resourceName;
+    private String fieldName;
+    private long fieldValue;
+
+    public ResourceNotFoundException(String resourceName, String fieldName, long fieldValue) {
+        
+        // note super() is called
+        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fieldValue));
+        
+        this.resourceName = resourceName;
+        this.fieldName = fieldName;
+        this.fieldValue = fieldValue;
+    }
+    
+    // getters & setters
+}
+```
+
+```java
+// package, imports
+
+import com.chuwa.redbook.exception.ResourceNotFoundException;
+
+@Service
+public class PostServiceImpl implements PostService {
+    @Override
+    public PostDto getPostById(long id) {
+
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+
+        return modelMapper.map(post, PostDto.class);
+    }
+}
+```
+
+※ To use `GlobalExceptionHandler` instead, remove `@ResponseStatus`.
+The exception will **bubble up** to `@ControllerAdvice`.
 
 ------------
 
