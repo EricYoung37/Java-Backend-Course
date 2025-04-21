@@ -28,8 +28,7 @@ Combination of `@SpringBootConfiguration`, `@EnableAutoConfiguration` and `Compo
 ```java
 package com.chuwa.redbook; // pay attention to the location
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+// imports
 
 @SpringBootApplication
 public class RedbookApplication {
@@ -40,6 +39,13 @@ public class RedbookApplication {
 
 }
 ```
+
+
+### ◆ `@Component`
+
+Annotated **class** is a candidate for **auto-detection** when using annotation-based configuration and classpath scanning (`@ComponentScan`).
+
+Specializations: `@Configuration`, `@Controller`, `@Service`, `@Repository`.
 
 
 ### ◆ `@Configuration`
@@ -53,11 +59,10 @@ Annotated **method** produces a bean managed by the Spring container.
 Used with `@Configuration` or `Component`.
 
 ```java
-package com.chuwa.redbook.config; // pay attention to the folder
+package com.chuwa.redbook.config; // pay attention to the folder (package)
 
 import org.modelmapper.ModelMapper; // 3rd-party package
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+// imports
 
 @Configuration
 public class CommonConfig {
@@ -73,11 +78,12 @@ public class CommonConfig {
 
 ### ◆ `@Autowired`
 Marks a **constructor**, **field**, **setter** method, or **config method** as to be autowired by Spring's **dependency injection** facilities.
+
+#### Field Injection
 ```java
 package com.chuwa.redbook.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-// import ...
+// imports
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -91,10 +97,13 @@ public class PostController {
 ```
 
 ```java
-package com.chuwa.redbook.service.impl; // pay attention to the impl location
+// pay attention to the implementation and interface locations
 
-import org.springframework.beans.factory.annotation.Autowired;
-// import ...
+package com.chuwa.redbook.service.impl;
+
+import com.chuwa.redbook.service.PostService; // interface
+
+// imports
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -109,40 +118,374 @@ public class PostServiceImpl implements PostService {
 }
 ```
 
+#### Setter Injection
+```java
+// package, imports
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+
+    private PostService postService;
+
+    @Autowired
+    public void setPostService(PostService postService) {
+        this.postService = postService;
+    }
+
+    // ...
+}
+```
+
+#### Constructor Injection
+```java
+// package, imports
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+
+    private final PostService postService;
+    
+    @Autowired // optional if only one constructor (since Spring 4.3)
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
+    // ...
+}
+```
+
+
+#### ◆ `@Primary`
+
+Indicates that a bean should be given **preference** when **multiple candidates** are qualified to autowire a single-valued dependency.
+
+
+#### ◆ `@Qualifier`
+
+Used alongside `@Autowired` to **choose** a bean to inject when **multiple candidates of the same type** exist
+(**overrides** `@Primary`).
+
+Used on a **field** or **parameter**.
+
+```java
+// service interface
+
+public interface PostService {
+    void publishPost();
+}
+```
+
+```java
+// service primary implementation
+
+@Service
+@Primary
+public class SimplePostService implements PostService {
+    @Override
+    public void publishPost() {
+        System.out.println("Publishing a simple post...");
+    }
+}
+```
+
+```java
+// service alternative implementation
+
+@Service("advancedPostService")
+public class AdvancedPostService implements PostService {
+    @Override
+    public void publishPost() {
+        System.out.println("Publishing an advanced post with SEO and tags...");
+    }
+}
+
+```
+
+```java
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+
+    private final PostService postService;
+    private final PostService advancedPostService;
+
+    @Autowired // optional if only one constructor (since Spring 4.3)
+    public PostController(PostService postService,
+                          @Qualifier("advancedPostService") PostService advancedPostService) {
+        this.postService = postService; // Will get SimplePostService (because it's @Primary)
+        this.advancedPostService = advancedPostService;
+    }
+
+    @GetMapping("/simple")
+    public void postSimple() {
+        postService.publishPost();
+    }
+
+    @GetMapping("/advanced")
+    public void postAdvanced() {
+        advancedPostService.publishPost();
+    }
+}
+```
+
+
 ## 2. Web Layer (REST API)
 
 ### ◆ `@RestController`
+
+Combination of `Controller` and `ResponseBody`.
+
+- `Controller`: Annotated **class** is a "Controller" (for example, a web controller).
+- `ResponseBody`: Indicates a **method return value** should be bound to the web response body.
+
+
 ### ◆ `@RequestMapping`
+
+Maps requests to controllers methods.
+
+Used at the **class level** to express **shared mappings**
+or at the **method level** to narrow down to a specific **endpoint mapping** (less preferred).
+
+```java
+package com.chuwa.redbook.controller; // pay attention to the folder (package)
+
+// imports
+
+@RestController
+@RequestMapping("/api/v1/posts") // shared mappings
+public class PostController {
+    // ...
+}
+```
+
+
 ### ◆ `@PostMapping`
-### ◆ `@GetMapping`
-### ◆ `@PutMapping`
-### ◆ `@DeleteMapping`
+
+Maps HTTP `POST` requests onto specific handler methods.
+
+
 ### ◆ `@Valid`
+Marks a property, **method parameter** (typically **DTOs**), or method return type for validation cascading.
+
+
 ### ◆ `@RequestBody`
+Binds a method parameter to the request body
+(deserialized into an `Object` through an `HTTPMessageReader`).
+
+```java
+// package, imports
+
+import com.chuwa.redbook.payload.PostDto; // DTO class in another custom package
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+    
+    // postService injection
+
+    @PostMapping()
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
+        PostDto postResponse = postService.createPost(postDto);
+        return new ResponseEntity<>(postResponse, HttpStatus.CREATED);
+    }
+}
+```
+
+
+### ◆ `@GetMapping`
+
+Maps HTTP `GET` requests onto specific handler methods.
+
+
 ### ◆ `@RequestParam`
+
+Binds a method parameter to a web request parameter (e.g., query parameter).
+
+```java
+// package, imports
+
+import com.chuwa.redbook.util.AppConstants; // AppConstants class in another custom package
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+    
+    // postService injection
+
+    @GetMapping()
+    public ResponseEntity<List<PostDTO>> getAllPosts(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir
+    ) {
+        return postService.getAllPost(pageNo, pageSize, sortBy, sortDir);
+    }
+    
+    // example URL: /api/v1/posts?pageNo={pageNo}&sortBy={sortBy}
+}
+```
+
+
 ### ◆ `@PathVariable`
+
+Binds a method parameter to a **URI template variable**.
+
+```java
+// package, imports
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+    
+    // postService injection
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
+        return ResponseEntity.ok(postService.getPostById(id));
+    }
+    
+    // example URL: /api/v1/posts/{id}
+}
+```
+
+
+### ◆ `@PutMapping`
+
+Maps HTTP `PUT` requests onto specific handler methods.
+
+```java
+// package, imports
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+    
+    // postService injection
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostDto> updatePostById(@Valid @RequestBody PostDto postDto, @PathVariable(name = "id") long id) {
+        PostDto postResponse = postService.updatePost(postDto, id);
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+    }
+}
+```
+
+
+### ◆ `@DeleteMapping`
+
+Maps HTTP `DELETE` requests onto specific handler methods.
+
+```java
+// package, imports
+
+@RestController
+@RequestMapping("/api/v1/posts")
+public class PostController {
+    
+    // postService injection
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable(name = "id") long id) {
+        postService.deletePostById(id);
+        return new ResponseEntity<>("Post entity deleted successfully.", HttpStatus.OK);
+    }
+}
+```
+
+
+### ◆ `@PatchMapping`
+
+Maps HTTP `PATCH` requests onto specific handler methods.
+
+`@RequestBody` is a **map** for **partial updates** (fields specified by the client).
+
+```java
+@PatchMapping("/{id}")
+public ResponseEntity<PostDto> partiallyUpdatePost(
+        @RequestBody Map<String, Object> updates,
+        @PathVariable(name = "id") long id) {
+    PostDto updatedPost = postService.partiallyUpdatePost(id, updates);
+    return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+}
+```
+
 
 
 ## 3. Service Layer
 
 ### ◆ `@Service`
 
+```java
+// pay attention to the implementation and interface locations
+
+package com.chuwa.redbook.service.impl;
+
+import com.chuwa.redbook.service.PostService; // interface
+
+// imports
+
+@Service
+public class PostServiceImpl implements PostService {
+    // ...
+}
+```
+
+
 
 ## 4. Persistence Layer (JPA/Hibernate)
 
 ### ◆ `@Entity`
+
+Annotated class is a JPA entity providing object-relational mapping (ORM).
+
 ### ◆ `@Table`
+
+Provides additional configuration for an entity, e.g., table name.
+
 ### ◆ `@UniqueConstraint`
+
+
+
 ### ◆ `@Id`
 ### ◆ `@GeneratedValue`
+
+
 ### ◆ `@Column`
+
+
 ### ◆ `@OneToMany`
 ### ◆ `@ManyToOne`
 ### ◆ `@JoinColumn`
+
+
 ### ◆ `@CreationTimestamp`
 ### ◆ `@UpdateTimestamp`
 
+
+
+
+
 ### ◆ `@Repository`
+
+Denotes a class as a Data Access Object (DAO) or repository,
+primarily used for interacting with a database.
+
+```java
+package com.chuwa.redbook.dao; // pay attention to the folder (package)
+
+import com.chuwa.redbook.entity.Post; // entity class in another custom package
+
+// imports
+
+@Repository
+public interface PostRepository extends JpaRepository<Post, Long> {
+    // no code needed
+}
+```
+
 
 
 ## 5. Exception Handling
@@ -158,4 +501,4 @@ public class PostServiceImpl implements PostService {
 **References**
 - [Spring Boot API](https://docs.spring.io/spring-boot/api/java/index.html)
 - [gindex/spring-boot-annotation-list](https://github.com/gindex/spring-boot-annotation-list)
-- [CTYue/springboot-redbook](https://github.com/CTYue/springboot-redbook/blob/07_01_validation/src/main/java/com/chuwa/redbook/RedbookApplication.java)
+- [CTYue/springboot-redbook](https://github.com/CTYue/springboot-redbook/tree/07_01_validation/src/main/java/com/chuwa/redbook)
