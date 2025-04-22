@@ -55,17 +55,16 @@ JPA will throw an error if `studentName` is null during persist
 ## Question 5
 > Data flow in Spring Boot Application Layers
 
-|  Step  | Layer                | Action                                                   |
-|:------:|----------------------|----------------------------------------------------------|
-|   1    | Controller           | Receives HTTP request from Postman and maps to DTO       |
-|   2    | Controller → Service | Passes request DTO to the service layer                  |
-|   3    | Service              | Validates business logic, creates entity object          |
-|   4    | Service → Repository | Calls repository to persist the entity                   |
-|   5    | Repository           | Interacts with the database and returns the saved entity |
-|   6    | Repository → Service | Returns saved entity to the service layer                |
-|   7    | Service → Controller | Returns entity to controller (optionally as DTO)         |
-|   8    | Controller           | Maps entity to response DTO and returns JSON response    |
-|   9    | Controller → Postman | Sends final JSON response back to Postman                |
+```mermaid
+flowchart TD
+    A[Postman] -->|1. HTTP Request| B[Controller\nValidates Request Body]
+    B -->|2. DTO| C[Service\nMaps between DTO and Entity,\nHandles Business Logic]
+    C -->|4. Repo Call| D[Repository\nPersists Entity]
+    D <--> |5. Data Exchange| E[Database]
+    D -->|6. Returned Entity| C
+    C -->|7. Returned DTO| B
+    B -->|8. JSON Response| A
+```
 
 
 ## Question 6
