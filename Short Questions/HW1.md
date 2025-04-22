@@ -291,10 +291,10 @@ The Java load sequence (also called the **class loading and initialization seque
 
 ```mermaid
 flowchart TD
-    A[1. Loading<br/>- ClassLoader loads .class file into memory<br/>- Class object created]
-    B[2. Linking<br/>a. Verification<br/>- Bytecode is checked for correctness<br/>b. Preparation<br/>- Static fields allocated with default values<br/>c. Resolution<br/>- Symbolic references resolved to direct references]
-    C["3. Initialization<br/>- Static blocks executed<br/>- Static fields assigned real values<br/>- &ltclinit&gt() method runs (if present)"]
-D["4. Instantiation (Optional)<br/>- Object is created (heap)<br/>- Constructor is called"]
+    A[Loading<br/>- ClassLoader loads .class file into memory<br/>- Class object created]
+    B[Linking<br/>a. Verification<br/>- Bytecode is checked for correctness<br/>b. Preparation<br/>- Static fields allocated with default values<br/>c. Resolution<br/>- Symbolic references resolved to direct references]
+    C[" Initialization<br/>- Static blocks executed<br/>- Static fields assigned real values<br/>- &ltclinit&gt() method runs (if present)"]
+    D[" Instantiation (Optional)<br/>- Object is created (heap)<br/>- Constructor is called"]
 
 A --> B --> C --> D
 ```
