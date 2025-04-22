@@ -57,13 +57,13 @@ JPA will throw an error if `studentName` is null during persist
 
 ```mermaid
 flowchart TD
-    A[Postman] -->|1. HTTP Request| B[Controller\nValidates Request Body]
-    B -->|2. DTO| C[Service\nMaps between DTO and Entity,\nHandles Business Logic]
-    C -->|4. Repo Call| D[Repository\nPersists Entity]
-    D <--> |5. Data Exchange| E[Database]
-    D -->|6. Returned Entity| C
-    C -->|7. Returned DTO| B
-    B -->|8. JSON Response| A
+    A[Postman] -->|HTTP Request| B[Controller\nValidates Request Body]
+    B -->|DTO| C[Service\nMaps between DTO and Entity,\nHandles Business Logic]
+    C -->|Repo Call| D[Repository\nPersists Entity]
+    D <--> |Data Exchange| E[(Database)]
+    D -->|Returned Entity| C
+    C -->|Returned DTO| B
+    B -->|JSON Response| A
 ```
 
 
