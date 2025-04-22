@@ -1,5 +1,5 @@
 # Homework 2 - Collections & Exception Handling
-**Author: M.Y. Yang**
+**Author: M. Yang**
 
 ## Question 1
 See directory [Coding/HW2/Question1](../Coding/HW2/Question1).

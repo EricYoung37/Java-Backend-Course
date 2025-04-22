@@ -1,5 +1,5 @@
 # Homework 5 - REST API
-**Author: M.Y. Yang**
+**Author: M. Yang**
 
 ## Question 1
 > Practice HTTP methods in Postman.

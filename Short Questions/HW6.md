@@ -1,5 +1,5 @@
 # Homework 6 - Spring Boot Introduction
-**Author: M.Y. Yang**
+**Author: M. Yang**
 
 ## Question 1
 > Common Spring Boot Annotations

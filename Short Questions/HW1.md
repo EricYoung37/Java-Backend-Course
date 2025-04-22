@@ -1,8 +1,8 @@
 # Homework 1 - Java OOP
-**Author: M.Y. Yang**
+**Author: M. Yang**
 
 ## Question 1
-> 3/4 Fundamental conecpts of OOP
+> 3/4 Fundamental concepts of OOP
 > * Encapsulation
 > * Polymorphism
 > * Inheritance
@@ -147,7 +147,7 @@ Wrappers allow you to represent "no value" (null) — useful in databases, APIs,
 ## Question 4
 > String pool and string immunity
 
-### What is String Pool in Java
+### What is String Pool in Java?
 The **String Pool** (also called the **String Intern Pool**) is a special memory area inside the **Java heap** that stores **unique String literals**.
 
 Whenever you create a String like this:
@@ -289,39 +289,14 @@ The default implementation returns an integer value for the object as a hash cod
 
 The Java load sequence (also called the **class loading and initialization sequence**) describes how the **JVM loads, links, and initializes classes** before they are used at runtime.
 
-```text
-+---------------------------------------------+
-| 1. Loading                                  |
-|---------------------------------------------|
-| - ClassLoader loads .class file into memory |
-| - Class object created                      |
-+--------------------------------------------+
-        ↓
-+--------------------------------------------------+
-| 2. Linking                                       |
-|--------------------------------------------------|
-| a. Verification                                  |
-|    - Bytecode is checked for correctness         |
-| b. Preparation                                   |
-|    - Static fields allocated with default values |
-| c. Resolution                                    |
-|    - Symbolic references resolved to direct refs |
-+--------------------------------------------------+
-        ↓
-+---------------------------------------+
-| 3. Initialization                     |
-|---------------------------------------|
-| - Static blocks executed              |
-| - Static fields assigned real values  |
-| - <clinit>() method runs (if present) |
-+---------------------------------------+
-        ↓
-+-----------------------------+
-| 4. Instantiation (Optional) |
-|-----------------------------|
-| - Object is created (heap)  |
-| - Constructor is called     |
-+-----------------------------+
+```mermaid
+flowchart TD
+    A[1. Loading<br/>- ClassLoader loads .class file into memory<br/>- Class object created]
+    B[2. Linking<br/>a. Verification<br/>- Bytecode is checked for correctness<br/>b. Preparation<br/>- Static fields allocated with default values<br/>c. Resolution<br/>- Symbolic references resolved to direct references]
+    C["3. Initialization<br/>- Static blocks executed<br/>- Static fields assigned real values<br/>- &ltclinit&gt() method runs (if present)"]
+D["4. Instantiation (Optional)<br/>- Object is created (heap)<br/>- Constructor is called"]
+
+A --> B --> C --> D
 ```
 
 ### Triggered When:
@@ -349,7 +324,7 @@ Encapsulation refers to bundling data (variables) and methods that operate on th
 | **Validation Control**       | Enforces validation rules on inputs via setters, ensuring integrity. |
 | **Ease of Maintenance**      | Facilitates changes and refactoring without breaking external code.  |
 
-For example implementation, see question 1.
+For example, implementation, see question 1.
 
 
 ## Question 16
