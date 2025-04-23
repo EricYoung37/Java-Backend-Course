@@ -1,4 +1,4 @@
-# Homework 4 - Multi-threading
+# Homework 4 — Multi-threading
 **Author: M. Yang**
 
 ## Question 2

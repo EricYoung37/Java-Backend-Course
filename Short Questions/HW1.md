@@ -1,4 +1,4 @@
-# Homework 1 - Java OOP
+# Homework 1 — Java OOP
 **Author: M. Yang**
 
 ## Question 1

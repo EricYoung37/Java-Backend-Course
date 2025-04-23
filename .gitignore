@@ -7,4 +7,6 @@ Coding/**/out/
 # Ignore all .iml files anywhere in the repo
 **/*.iml
 
+.env
+
 .DS_Store

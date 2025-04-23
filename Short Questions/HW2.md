@@ -1,4 +1,4 @@
-# Homework 2 - Collections & Exception Handling
+# Homework 2 — Collections & Exception Handling
 **Author: M. Yang**
 
 ## Question 1

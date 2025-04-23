@@ -1,4 +1,4 @@
-# Homework 6 - Spring Boot Introduction
+# Homework 6 — Spring Boot Introduction
 **Author: M. Yang**
 
 ## Question 1

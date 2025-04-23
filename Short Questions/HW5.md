@@ -1,4 +1,4 @@
-# Homework 5 - REST API
+# Homework 5 — REST API
 **Author: M. Yang**
 
 ## Question 1
