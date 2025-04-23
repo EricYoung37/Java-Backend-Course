@@ -25,7 +25,7 @@ public class MongoPing {
 
         String connectionString = String.format(
                 "mongodb+srv://%s:%s@%s.nzqgtvd.mongodb.net/?retryWrites=true&w=majority&appName=%s",
-                user, password, cluster, cluster.substring(0, 1).toUpperCase() + cluster.substring(1)
+                user, password, cluster, cluster
         );
 
         ServerApi serverApi = ServerApi.builder()
