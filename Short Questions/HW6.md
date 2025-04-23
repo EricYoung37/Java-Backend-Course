@@ -377,3 +377,35 @@ public class PostGraphQLController {
 
 ## Question 10
 > A mini Spring Boot Application with a POST API backed by MongoDB.
+
+### Create Post
+![image](https://github.com/user-attachments/assets/b662adf1-e8a1-4ff7-af44-1be95d48293f)
+
+
+### Get All Posts
+![image](https://github.com/user-attachments/assets/17803395-5a92-43c0-a2cf-fac4f7e569d1)
+
+
+### Get Post by ID
+#### ◾ 200 OK
+![image](https://github.com/user-attachments/assets/8b9fdd01-b3b9-43be-93ea-3de7b8103186)
+
+#### ◾ 404 Not Found (Exception Handled)
+![image](https://github.com/user-attachments/assets/bafc5b85-99a6-4b8c-a8e7-cb18284c0ba0)
+
+
+### Put Post by ID
+#### ◾ 200 OK
+![image](https://github.com/user-attachments/assets/118e7f4a-3c82-45d5-a066-848b8e2d8b99)
+
+#### ◾ 404 Not Found (Exception Handled)
+![image](https://github.com/user-attachments/assets/6cec55e1-e8dd-46b9-9b9f-d28b8f48052c)
+
+
+### Delete Post by ID
+#### ◾ 200 OK
+![image](https://github.com/user-attachments/assets/378139b0-ecdb-43b0-bcf2-e01b56034ae5)
+
+#### ◾ 404 Not Found (Exception Handled)
+![image](https://github.com/user-attachments/assets/2ea7f97d-31e9-4c1d-8184-952a2ffbc283)
+
