@@ -1,5 +1,5 @@
-# Homework 4 - Multi-threading
-**Author: M.Y. Yang**
+# Homework 4 — Multi-threading
+**Author: M. Yang**
 
 ## Question 2
 > Thread-safe singleton class
