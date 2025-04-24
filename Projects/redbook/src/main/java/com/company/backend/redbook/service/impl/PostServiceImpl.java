@@ -1,6 +1,8 @@
 package com.company.backend.redbook.service.impl;
 
+import com.company.backend.redbook.dao.CommentRepository;
 import com.company.backend.redbook.dao.PostRepository;
+import com.company.backend.redbook.entity.Comment;
 import com.company.backend.redbook.entity.Post;
 import com.company.backend.redbook.exception.ResourceNotFoundException;
 import com.company.backend.redbook.payload.PostDTO;
@@ -15,11 +17,13 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.modelMapper = modelMapper;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -51,6 +55,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePostById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+
+        // first, delete all comments under this post
+        List<Comment> comments = post.getComments();
+        for(Comment comment : comments) {
+            commentRepository.delete(comment);
+        }
+
         postRepository.delete(post);
     }
 }

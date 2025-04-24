@@ -38,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getCommentsByPostId(Long postId) {
+        // first see if the post exists
+        // postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
         List<Comment> comments = commentRepository.findByPostId(postId);
         return comments.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).toList();
     }
