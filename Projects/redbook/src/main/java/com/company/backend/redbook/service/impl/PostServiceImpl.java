@@ -55,13 +55,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePostById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-
-        // first, delete all comments under this post
-        List<Comment> comments = post.getComments();
-        for(Comment comment : comments) {
-            commentRepository.delete(comment);
-        }
-
+        // no need to write code to delete comments
+        // because of cascade = CascadeType.ALL, orphanRemoval = true
         postRepository.delete(post);
     }
 }
