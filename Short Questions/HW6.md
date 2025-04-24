@@ -378,6 +378,8 @@ public class PostGraphQLController {
 ## Question 10
 > A mini Spring Boot Application with a POST API backed by MongoDB.
 
+See [mongo-blog](../Projects/mongo-blog).
+
 ### Create Post
 ![image](https://github.com/user-attachments/assets/b662adf1-e8a1-4ff7-af44-1be95d48293f)
 

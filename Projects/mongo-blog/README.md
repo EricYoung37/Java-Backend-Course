@@ -1,4 +1,4 @@
-# Essential IDEA Configuration
+# Essential IDEA Configurations
 
 ## Module Import
 This mini project is a module of the root repository
