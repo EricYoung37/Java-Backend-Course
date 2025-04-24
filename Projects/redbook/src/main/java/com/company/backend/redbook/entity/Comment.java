@@ -3,20 +3,17 @@ package com.company.backend.redbook.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "comments")
+public class Comment {
+    @jakarta.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "title", nullable = false)
-    private String title;
 
     @Column(name = "content", nullable = false)
     private String content;
@@ -27,19 +24,19 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedDateTime;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public Post() {
+    public Comment() {
     }
 
-    public Post(Long id, String title, String content, LocalDateTime createdDateTime, LocalDateTime updatedDateTime, List<Comment> comments) {
+    public Comment(Long id, String content, LocalDateTime createdDateTime, LocalDateTime updatedDateTime, Post post) {
         this.id = id;
-        this.title = title;
         this.content = content;
         this.createdDateTime = createdDateTime;
         this.updatedDateTime = updatedDateTime;
-        this.comments = comments;
+        this.post = post;
     }
 
     public Long getId() {
@@ -48,14 +45,6 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -82,19 +71,18 @@ public class Post {
         this.updatedDateTime = updatedDateTime;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public Post getPost() {
+        return post;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "Comment{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", createdDateTime=" + createdDateTime +
                 ", updatedDateTime=" + updatedDateTime +
