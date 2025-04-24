@@ -1,68 +1,14 @@
 # Chuwa 03/17/2025
 
-
-
-## First time configure
-
----
-
-### 1. Clone this repo:
-
-open your teminal, run below command.
-
-```bash
-cd <your_work_dir>
-git clone git@github.com:JoshWang3/Chuwa20250317.git
-```
-
-### 2. Send your github email address to me on Teams and I will add you to this repo
-
-
-
-### 3. Create your own branches
-
-```bash
-git branch firstName_lastName/main
-git checkout firstName_lastName/main
-
-git push origin firstName_lastName/main
-```
-
-
-
-## Submit your assigments
-
----
-
-### 3. Create a new feature branch each time
-
-```bash
-example: 
-HW1:
-git checkout -b firstName_lastName/hw1
-
-### Writing your hw
-
-git add .
-git commit -m "commit_message"
-git push origin firstName_lastName/hw1
-```
-
-
-
-### 4. Push your local branch to Github
-
-```bash
-git push origin firstName_lastName/hw1
-```
-
-
-
-### 5. Raise PR
-
-Open github, **Compare and Pull** or **New pull request**
-
-- to `firstName_lastName/main`
-- from `firstName_lastName/hw1`
-
-*You should always raise your PRs to your own firstName_lastName/main branch, **Please don't raise your PR to main branch***
+* [x] HW1 - hw1-java&oop
+* [x] HW2 - hw21-exception&enum&collection
+* [ ] HW3 - hw23-java8
+* [x] HW4 - hw24-multiThreading
+* [x] HW5 - hw30-DB&REST-APIs
+* [x] HW6 - hw40-springboot-post
+* [x] HW7 - hw41-springboot-RUD
+* [ ] HW8 - hw42-Spring-Data
+* [ ] HW9 - hw43-Spring-Basic
+* [ ] HW10 - hw44-Spring-MVC
+* [ ] HW11 - hw45-SpringSecurity
+* [ ] HW12 - hw46-testing
