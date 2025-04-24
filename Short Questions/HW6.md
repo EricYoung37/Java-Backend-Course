@@ -4,7 +4,7 @@
 ## Question 1
 > Common Spring Boot Annotations
 
-See [SpringBoot-Annotations.md](Spring-Boot-Annotations)
+See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md).
 
 ## Question 2
 > Explain how `@Column` defines a column in the example below.
