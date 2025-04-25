@@ -68,7 +68,7 @@ flowchart TD
 
 
 ## Question 6
-> `application.properties` vs `application.yml`
+> `application.properties` vs. `application.yml`
 
 Both `application.properties` and `application.yml` are **configuration files** in a Spring Boot application.
 They serve the same purpose: to define application-level settings and environment-specific values—but they use **different formats**.
@@ -97,7 +97,7 @@ spring:
 
 
 ## Question 7
-> Naming: REST APIs vs GraphQL
+> Naming: REST APIs vs. GraphQL
 
 | Aspect          | REST                                             | GraphQL                                                   |
 |-----------------|--------------------------------------------------|-----------------------------------------------------------|
@@ -130,7 +130,7 @@ mutation {
 
 
 ## Question 8
-> N+1 problem: REST APIs vs GraphQL
+> N+1 problem: REST APIs vs. GraphQL
 > 
 > N+1 problem:
 > - A query is performed to get a list of records, and later many queries for each of those records.

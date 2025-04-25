@@ -204,7 +204,7 @@ public class Main {
 
 
 ## Question 4
-> `Runnable` **vs** `Callable`
+> `Runnable` vs. `Callable`
 
 | Feature                 | `Runnable`                                   | `Callable<V>`                      |
 |-------------------------|----------------------------------------------|------------------------------------|
@@ -215,7 +215,7 @@ public class Main {
 
 
 ## Question 5
-> `start()` **vs** `run()`
+> `start()` vs. `run()`
 
 | Aspect                | `start()` | `run()`                     |
 |-----------------------|-----------|-----------------------------|
@@ -620,7 +620,7 @@ class VolatileExample {
 
 
 ## Question 10
-> Class lock **vs** Object lock
+> Class lock vs. Object lock
 
 | Aspect               | Object Lock (`this`)              | Class Lock (`MyClass.class`)           |
 |----------------------|-----------------------------------|----------------------------------------|
@@ -739,7 +739,7 @@ See [Question 3](#4-using-thread-pool-executorservice)
 
 
 ## Question 17
-> `shutdown()` **vs** `shutdownNow()`
+> `shutdown()` vs. `shutdownNow()`
 
 | **Method**          | **Description**                                                  | **Running Tasks**          | **Waiting Tasks**                                  |
 |---------------------|------------------------------------------------------------------|----------------------------|----------------------------------------------------|
@@ -847,7 +847,7 @@ public class AtomicReferenceExample {
 
 
 ## Question 21
-> `Future` **vs** `CompletableFuture`
+> `Future` vs. `CompletableFuture`
 > 
 > Main methods for `CompletableFuture`
 

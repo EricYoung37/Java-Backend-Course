@@ -242,7 +242,7 @@ In JDBC, a `ResultSet` is an object that represents the result set of a database
 
 
 ## Question 9
-> Spring Data JPA vs Hibernate vs JDBC
+> Spring Data JPA vs. Hibernate vs. JDBC
 
 | **Aspect**                     | **Spring Data JPA**                                                             | **Hibernate**                                                     | **JDBC**                                          |
 |--------------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------|
@@ -287,7 +287,7 @@ int total_pages = foodOutletTree.path("total_pages").asInt();
 
 
 ## Question 11
-> Serialization vs Deserialization
+> Serialization vs. Deserialization
 
 - **Serialization:** converting an **object** into a **byte stream** (e.g., JSON, XML, or binary/native format) that can be easily stored in a file, sent over a network, or transferred to another system.
 - **Deserialization:** the reverse process of serialization.

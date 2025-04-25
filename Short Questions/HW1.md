@@ -132,7 +132,7 @@ Wrappers allow you to represent "no value" (null) — useful in databases, APIs,
 
 
 ## Question 3
-> `HashMap` **vs** `HashTable`
+> `HashMap` vs. `HashTable`
 
 | Feature                    | `HashMap`                                          | `Hashtable`                                  |
 |----------------------------|----------------------------------------------------|----------------------------------------------|
@@ -231,7 +231,7 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 9
-> Overriding **vs** Overloading
+> Overriding vs. Overloading
 
 | **Feature**           | **Overloading**                                               | **Overriding**                                                                 |
 |-----------------------|---------------------------------------------------------------|--------------------------------------------------------------------------------|
@@ -256,7 +256,7 @@ Java method signature consists of:
 
 
 ## Question 11
-> `super` **vs** `this`
+> `super` vs. `this`
 
 | **Keyword** | **Refers To**                  | **Used For**                                                                      | **Context of Use**               |
 |-------------|--------------------------------|-----------------------------------------------------------------------------------|----------------------------------|
@@ -328,7 +328,7 @@ For example, implementation, see [Question 1](#question-1).
 
 
 ## Question 16
-> Interface **vs** Abstract Class
+> Interface vs. Abstract Class
 
 | **Feature**          | **Interface**                                                   | **Abstract Class**                                  |
 |----------------------|-----------------------------------------------------------------|-----------------------------------------------------|
