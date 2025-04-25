@@ -168,6 +168,17 @@ List<Person> findPeopleAboveAge(int age);
 
 See [new redbook](../Projects/redbook/src/main/java/com/company/backend/redbook/service/impl).
 
+<details>
+<summary>Postman Test Results</summary>
+
+#### All Comments under the post with id 4
+![image](https://github.com/user-attachments/assets/ba4d367b-2b0e-4b5a-ae53-fafbb4870300)
+
+#### Comments with keyword "Mauritius" after created `2025-04-24T21:03:43.222037` under this post
+![image](https://github.com/user-attachments/assets/2510eec3-6e58-4a67-a1a6-1771a6fd9ae6)
+
+</details>
+
 
 ## Question 13
 > What is JPQL?
