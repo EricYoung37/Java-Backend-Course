@@ -2,6 +2,7 @@ package com.company.backend.redbook.service;
 
 import com.company.backend.redbook.payload.CommentDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CommentService {
@@ -14,4 +15,6 @@ public interface CommentService {
     CommentDTO updateCommentById(Long id, Long commentId, CommentDTO commentDTO);
 
     void deleteCommentById(Long postId, Long commentId);
+
+    List<CommentDTO> getCommentsByKeywordAfterDate(Long postId, String keyword, LocalDateTime date);
 }

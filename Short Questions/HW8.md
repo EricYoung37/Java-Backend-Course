@@ -103,7 +103,71 @@ See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md#-fetch).
 
 
 ## Question 9
-> JPA Naming Convention
+> JPA Repository Method Naming Convention
 > 
-> Whether to Implement JPA Method
+> Is manual method implementation needed?
 
+### JPA Repository Method Naming Convention
+
+```
+<action>[Distinct]By
+<Property1>
+[<comparison>]
+[<LogicalOP><Property2><comparison>]...[OrderBy<Property>[order]]
+```
+
+**Components Breakdown**
+
+| Part               | Description                                        | Examples                              |
+|--------------------|----------------------------------------------------|---------------------------------------|
+| **`<action>`**     | `find`, `delete`, `count`, etc.                    | `findBy`, `deleteBy`, `countBy`       |
+| **`Distinct`**     | (Optional) Returns unique results                  | `findDistinctBy`                      |
+| **`By`**           | Starts the query conditions                        |                                       |
+| **`<Property>`**   | field name, entity                                 | `Email`, `FirstName`                  |
+| **`<comparison>`** | (Optional) Comparison operator                     | `Like`, `GreaterThan`, `In`, `IsNull` |
+| **`<LogicalOP>`**  | Logical operator to chain conditions (`And`, `Or`) | `And`, `Or`                           |
+| **`OrderBy`**      | (Optional) Sorts results by a property             | `OrderByAge`                          |
+| **`<order>`**      | (Optional) Sorting direction (`Asc`/`Desc`)        | `OrderByDateDesc`                     |
+
+
+**Example Method Name**
+
+```java
+findDistinctByDepartmentNameContainingAndSalaryBetweenOrEmployeeStatusInOrderByHireDateDesc(
+    String departmentNameFragment, 
+    double minSalary, 
+    double maxSalary, 
+    List<String> statuses
+);
+```
+
+| **Component**                | **Explanation**                                                                                          |
+|------------------------------|----------------------------------------------------------------------------------------------------------|
+| `findDistinct`               | Ensures the query returns distinct (non-duplicate) results.                                              |
+| `ByDepartmentNameContaining` | Filters the results where the `departmentName` contains the given fragment (`departmentNameFragment`).   |
+| `AndSalaryBetween`           | Filters employees whose salary is between `minSalary` and `maxSalary` (inclusive).                       |
+| `OrEmployeeStatusIn`         | Filters employees whose `employeeStatus` is `In` the list provided (`statuses`), with an `Or` condition. |
+| `OrderByHireDateDesc`        | Orders the results by `hireDate` in descending order (most recently hired employees appear first).       |
+
+
+### Is manual method implementation needed?
+**No.**
+If the method **follows** Spring Data JPA’s **naming rules**, it will be **auto-implemented at runtime** by Spring.
+Manual implementation is only necessary if the query is too complex or does not fit the naming conventions,
+in which case custom queries (JPQL or native SQL) can be used.
+
+**JPQL Query Example**
+```java
+@Query("SELECT p FROM Person p WHERE p.age > ?1")
+List<Person> findPeopleAboveAge(int age);
+```
+
+
+## Question 10
+> Add an advanced JPA repository method to the project in Question 2.
+
+See [new redbook](../Projects/redbook/src/main/java/com/company/backend/redbook/service/impl).
+
+
+## Question 13
+> What is JPQL?

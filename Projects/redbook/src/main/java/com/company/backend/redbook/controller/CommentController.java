@@ -3,10 +3,12 @@ package com.company.backend.redbook.controller;
 import com.company.backend.redbook.payload.CommentDTO;
 import com.company.backend.redbook.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -50,5 +52,16 @@ public class CommentController {
             @PathVariable(value = "commentId") Long commentId) {
         commentService.deleteCommentById(postId, commentId);
         return new ResponseEntity<>("Deleted comment with ID: " + commentId, HttpStatus.OK);
+    }
+
+    // GET /api/posts/3/comments/search?keyword=hello&date=2024-11-01T00:00:00
+    @GetMapping("posts/{postId}/comments/search")
+    public ResponseEntity<List<CommentDTO>> getCommentsByKeywordAfterDate(
+            @PathVariable Long postId,
+            @RequestParam String keyword,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date
+    ) {
+        List<CommentDTO> comments = commentService.getCommentsByKeywordAfterDate(postId, keyword, date);
+        return ResponseEntity.ok(comments);
     }
 }
