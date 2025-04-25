@@ -132,7 +132,7 @@ Wrappers allow you to represent "no value" (null) — useful in databases, APIs,
 
 
 ## Question 3
-> `HashMap` **vs** `HashTable`
+> `HashMap` vs. `HashTable`
 
 | Feature                    | `HashMap`                                          | `Hashtable`                                  |
 |----------------------------|----------------------------------------------------|----------------------------------------------|
@@ -231,7 +231,7 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 9
-> Overriding **vs** Overloading
+> Overriding vs. Overloading
 
 | **Feature**           | **Overloading**                                               | **Overriding**                                                                 |
 |-----------------------|---------------------------------------------------------------|--------------------------------------------------------------------------------|
@@ -256,7 +256,7 @@ Java method signature consists of:
 
 
 ## Question 11
-> `super` **vs** `this`
+> `super` vs. `this`
 
 | **Keyword** | **Refers To**                  | **Used For**                                                                      | **Context of Use**               |
 |-------------|--------------------------------|-----------------------------------------------------------------------------------|----------------------------------|
@@ -308,7 +308,7 @@ A --> B --> C --> D
 ## Question 14
 > Polymorphism
 
-See questions 1 and 9.
+See [Question 1](#question-1) and [Question 9](#question-9).
 
 
 ## Question 15
@@ -324,11 +324,11 @@ Encapsulation refers to bundling data (variables) and methods that operate on th
 | **Validation Control**       | Enforces validation rules on inputs via setters, ensuring integrity. |
 | **Ease of Maintenance**      | Facilitates changes and refactoring without breaking external code.  |
 
-For example, implementation, see question 1.
+For example, implementation, see [Question 1](#question-1).
 
 
 ## Question 16
-> Interface **vs** Abstract Class
+> Interface vs. Abstract Class
 
 | **Feature**          | **Interface**                                                   | **Abstract Class**                                  |
 |----------------------|-----------------------------------------------------------------|-----------------------------------------------------|

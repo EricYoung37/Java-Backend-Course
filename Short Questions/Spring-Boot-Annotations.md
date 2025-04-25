@@ -503,7 +503,9 @@ public class Post {
 
 Indicates `Current Entity : Annotated Field = 1 : N`.
 
-`mappedBy = {field_owned_by_the_other_entity}`
+`mappedBy = {field_owned_by_the_other_entity}`.
+
+In JPA, the side **without** `mappedBy` is the **owning side** that controls the mapping.
 
 ```java
 // package, imports
@@ -522,6 +524,47 @@ public class Post {
 ```
 
 
+### ◆ `cascade`
+Defines **which operations on the parent** entity should be **automatically applied to the child** entity.
+
+| CascadeType | Description                                                                        |
+|-------------|------------------------------------------------------------------------------------|
+| `PERSIST`   | Saves the child entity when the parent is persisted                                |
+| `MERGE`     | Updates the child entity when the parent is merged                                 |
+| `REMOVE`    | Deletes the child entity when the parent is deleted                                |
+| `REFRESH`   | Reloads the child entity when the parent is refreshed from the database            |
+| `DETACH`    | Detaches the child entity when the parent is detached from the persistence context |
+| `ALL`       | Applies all of the above cascade operations                                        |
+
+Combination is possible, e.g., `cascade = { PERSIST, MERGE }`.
+
+
+### ◆ `orphanRemoval = true`
+
+If a child entity is **removed** from the parent’s **COLLECTION**,
+it should be **deleted from** the **DATABASE** automatically.
+
+**For parent to own full cycle of child, `CascadeType.ALL` is not enough**.
+```java
+@Entity
+public class Author {
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL) // No orphanRemoval
+    private List<Book> books = new ArrayList<>();
+}
+
+@Entity
+public class Book {
+    @ManyToOne
+    private Author author;
+}
+```
+
+In this case, if `author.getBooks().remove(book);` is executed, the `Book` entity
+removed from the **collection** is **not** removed from the **database**.
+
+However, if **children are shared across parents**,
+`CascadeType.REMOVE` and `orphanRemoval = true` should **not** be used.
+
 ### ◆ `@ManyToOne`
 
 Indicates `Current Entity : Annotated Field = N : 1`.
@@ -531,9 +574,9 @@ Indicates `Current Entity : Annotated Field = N : 1`.
 
 Indicates a **foreign key**:
 a column (with `name`) in the current entity
-refers to a primary key in the reference entity (inferred by the field type).
+refers to a primary key in the reference entity (inferred from the annotated field).
 
-Usually used with `ManyToOne` or `@OneToOne`.
+Used with `ManyToOne`, `@OneToOne`, and `@ManyToMany`, `@JoinTable`.
 
 ```java
 // package, imports
@@ -550,8 +593,112 @@ public class Comment {
 }
 ```
 
-※ `@OneToMany(mappedBy)` in `Post` and `@JoinColumn` in `Comment`
-creates a **unidirectional** mapping from `Comment` to `Post` (one direction).
+
+### ◆ `fetch`
+
+- `FetchType.LAZY`: Load the related entity only when it is accessed (**on-demand**).
+- `FetchType.EAGER`: Load the related entity **immediately along** with the parent.
+
+#### Default Fetch Types by Relation
+Overriding may be needed.
+
+| Relationship Type | Default FetchType |
+|-------------------|--------------------|
+| `@OneToMany`      | `LAZY`             |
+| `@ManyToMany`     | `LAZY`             |
+| `@OneToOne`       | `EAGER`            |
+| `@ManyToOne`      | `EAGER`            |
+
+
+
+### ◆ `@JoinTable`
+
+Specifies an association using a join table.
+
+```java
+// public class Current
+
+@ManyToMany
+@JoinTable(
+        name = "join_table_name",
+        joinColumns = @JoinColumn(name = "fk_current"), // FK referencing the current entity
+        inverseJoinColumns = @JoinColumn(name = "fk_target") // FK referencing the target entity
+)
+private Collection<T> targets;
+```
+
+
+### ◆ `@ManyToMany`
+
+Indicates `Current Entity : Annotated Field = N : N`.
+
+```java
+@Entity
+public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @ManyToMany(
+            cascade = CascadeType.ALL
+            // fetch = FetchType.LAZY is default
+            // orphanRemoval is not supported in ManyToMany
+    )
+    @JoinTable(
+      name = "author_book", 
+      joinColumns = @JoinColumn(name = "author_id"), 
+      inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private Set<Book> books = new HashSet<>();
+
+    // Constructors, getters, setters...
+    
+    public Author() { }
+
+    public Author(String name) {
+        this.name = name;
+    }
+    
+    // the other side has a similar method
+    public void addBook(Book book) {
+        books.add(book);
+        book.getAuthors().add(this);
+    }
+
+    // Getters and Setters
+}
+
+
+@Entity
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    @ManyToMany(mappedBy = "books")  // This side doesn't need @JoinTable
+    private Set<Author> authors = new HashSet<>();
+
+    // Constructors, getters, setters...
+
+    public Book() { }
+
+    public Book(String title) {
+        this.title = title;
+    }
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.getBooks().add(this);
+    }
+
+    // Getters and Setters
+}
+```
 
 
 ### ◆ `@CreationTimestamp`

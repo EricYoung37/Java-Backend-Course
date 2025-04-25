@@ -6,7 +6,7 @@ See directory [Coding/HW2/Question1](../Coding/HW2/Question1).
 
 
 ## Question 2
-> Checked Exception **vs** Unchecked Exception
+> Checked Exception vs. Unchecked Exception
 
 ### Comparison
 | Feature               | Checked Exception             | Unchecked Exception                                                        |
@@ -92,7 +92,7 @@ and overrides any return from `try` or `catch`.
 
 
 ## Question 5
-> `throw` **vs** `throws`
+> `throw` vs. `throws`
 
 | Feature        | `throw`                      | `throws`                                     |
 |----------------|------------------------------|----------------------------------------------|

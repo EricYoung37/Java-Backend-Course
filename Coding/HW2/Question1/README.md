@@ -1,4 +1,3 @@
-
 # Collection Practice
 
 ## Topics
