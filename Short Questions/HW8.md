@@ -7,7 +7,7 @@
 See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md).
 
 ## Question 2
-> A mini project with two APIs: post and comment, where one post is mapped to many comments.
+> Write Two APIs: post and comment, where one post is mapped to many comments.
 
 See [new redbook](../Projects/redbook).
 
@@ -61,3 +61,49 @@ See [new redbook](../Projects/redbook).
 
 ## Question 4
 > JPA vs Hibernate
+
+See [HW7 Question 9](HW7.md#question-9)
+
+
+## Question 5
+> What is HikariCP?
+> 
+> Benefits of connection pools
+
+HikariCP is a high-performance **JDBC connection pool library** for Java applications.
+
+| Benefit                                        | Description                                                                                                                                  |
+|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Improved Performance**                       | Reduces overhead by reusing existing connections, leading to faster response times.                                                          |
+| **Efficient Resource & Connection Management** | Manages limited connections, automatically validates, and replaces faulty connections, ensuring optimal usage and freeing up idle resources. |
+| **Scalability**                                | Can scale to handle large numbers of simultaneous database requests.                                                                         |
+| **Reliability**                                | Provides automatic recovery from failures and ensures better fault tolerance.                                                                |
+| **Thread Management**                          | Optimizes resource sharing and synchronization between threads.                                                                              |
+
+
+## Question 6
+> - `@OneToMany`
+> - `@ManyToOne`
+> - `@ManyToMany`
+
+See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md#-onetomany).
+
+
+## Question 7
+> - `CascadeType`
+> - `orphanRemoval`
+
+See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md#-cascade).
+
+
+## Question 8
+> `FetchType`
+
+See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md#-fetch).
+
+
+## Question 9
+> JPA Naming Convention
+> 
+> Whether to Implement JPA Method
+

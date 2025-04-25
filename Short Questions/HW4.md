@@ -4,7 +4,7 @@
 ## Question 2
 > Thread-safe singleton class
 
-See [HW2 Question9 - Singleton](HW2.md#singleton)
+See [HW2 Question9](HW2.md#singleton)
 
 ## Question 3
 > Ways to create threads
@@ -707,7 +707,7 @@ The key interface that provides the core thread pool functionality is `ExecutorS
 ## Question 15
 > How to submit a task to a thread pool?
 
-See [Question 3 - Using Thread Pool](#4-using-thread-pool-executorservice)
+See [Question 3](#4-using-thread-pool-executorservice)
 
 
 ## Question 16

@@ -308,7 +308,7 @@ A --> B --> C --> D
 ## Question 14
 > Polymorphism
 
-See questions 1 and 9.
+See [Question 1](#question-1) and [Question 9](#question-9).
 
 
 ## Question 15
@@ -324,7 +324,7 @@ Encapsulation refers to bundling data (variables) and methods that operate on th
 | **Validation Control**       | Enforces validation rules on inputs via setters, ensuring integrity. |
 | **Ease of Maintenance**      | Facilitates changes and refactoring without breaking external code.  |
 
-For example, implementation, see question 1.
+For example, implementation, see [Question 1](#question-1).
 
 
 ## Question 16

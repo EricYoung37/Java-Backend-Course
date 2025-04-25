@@ -244,13 +244,14 @@ In JDBC, a `ResultSet` is an object that represents the result set of a database
 ## Question 9
 > Spring Data JPA vs Hibernate vs JDBC
 
-| **Criteria**                   | **Spring Data JPA**                                       | **Hibernate**                                                  | **JDBC**                                      |
-|--------------------------------|-----------------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------|
-| **Abstraction Level**          | High (automates CRUD operations, repository pattern)      | Medium (ORM tool with more control)                            | Low (direct SQL interaction)                  |
-| **Ease of Use**                | Very easy (minimal configuration, auto-generated queries) | Moderate (requires entity mapping, custom queries)             | Hard (manual SQL, connection management)      |
-| **Flexibility & Querying**     | Low (auto-generated queries, JPQL support)                | High (HQL, Criteria API, native SQL)                           | Very high (full control over SQL)             |
-| **Performance**                | Moderate (some overhead due to abstraction)               | Good (performance tuning, caching)                             | High (no ORM overhead)                        |
-| **Transactions & Maintenance** | Built-in transaction management, easy to maintain         | Requires manual transaction handling, more complex maintenance | Manual transaction handling, hard to maintain |
+| **Aspect**                     | **Spring Data JPA**                                                             | **Hibernate**                                                     | **JDBC**                                          |
+|--------------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------|
+| **Overview**                   | **ORM API standard**; abstracts JDBC; implemented by frameworks like Hibernate. | **JPA implementation** with extra features; uses JDBC internally. | **Low-level SQL API**; used by JPA and Hibernate. |
+| **Abstraction Level**          | High (automates CRUD operations, repository pattern)                            | Medium (ORM tool with more control)                               | Low (direct SQL interaction)                      |
+| **Ease of Use**                | Very easy (minimal configuration, auto-generated queries)                       | Moderate (requires entity mapping, custom queries)                | Hard (manual SQL, connection management)          |
+| **Flexibility & Querying**     | Low (auto-generated queries, JPQL support)                                      | High (HQL, Criteria API, native SQL)                              | Very high (full control over SQL)                 |
+| **Performance**                | Moderate (some overhead due to abstraction)                                     | Good (performance tuning, caching)                                | High (no ORM overhead)                            |
+| **Transactions & Maintenance** | Built-in transaction management, easy to maintain                               | Requires manual transaction handling, more complex maintenance    | Manual transaction handling, hard to maintain     |
 
 
 ## Question 10
