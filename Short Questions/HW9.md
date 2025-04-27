@@ -128,7 +128,7 @@ public class MyApplication {
 
 **Example of Accessing Named Beans**
 
-Bean definitions in [Question 6](#question-6).
+`@Component` and `@Bean` definitions in [Question 6](#question-6).
 
 ```java
 import org.springframework.context.ApplicationContext;
@@ -353,12 +353,23 @@ public class MyCustomScopedBean {
 
 ## Question 15
 > Write a mini Spring Application to demonstrate:
-> - different types of dependency injection
-> - bean scopes
-> - dependency injection by type and by name
 > - bean registration by `@Component` and `@Bean`
+> - different bean scopes
+> - constructor injection, setter injection, field injection
+> - dependency injection by type and by name
+
+See [DI-demo](../Projects/DI-demo).
+
+<details>
+<summary>Demo Screenshots</summary>
+
+### Output
 
 
+### Beans Diagram in IntelliJ IDEA
+
+
+</details>
 
 ## Question 16
 > Explain the builder pattern with code.
