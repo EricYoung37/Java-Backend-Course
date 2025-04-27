@@ -364,10 +364,10 @@ See [DI-demo](../Projects/DI-demo).
 <summary>Demo Screenshots</summary>
 
 ### Output
-
+![Screenshot 2025-04-27 042812](https://github.com/user-attachments/assets/0a721d96-2c4c-4e94-bfcf-bd9fd2ba2c94)
 
 ### Beans Diagram in IntelliJ IDEA
-
+![Screenshot 2025-04-27 042905](https://github.com/user-attachments/assets/7950bdfe-4c39-4ed9-b142-a02cb217881f)
 
 </details>
 
