@@ -45,7 +45,7 @@ public class RedbookApplication {
 
 Annotated **class** is a candidate for **auto-detection** when using annotation-based configuration and classpath scanning (`@ComponentScan`).
 
-Specializations: `@Configuration`, `@Controller`, `@Service`, `@Repository`, `@ControllerAdvice`.
+**Specializations:** `@Configuration`, `@Controller`, `@Service`, `@Repository`, `@ControllerAdvice`.
 
 
 ### ◆ `@Configuration`
@@ -78,6 +78,9 @@ public class CommonConfig {
 
 ### ◆ `@Autowired`
 Marks a **constructor**, **field**, **setter** method, or **config method** as to be autowired by Spring's **dependency injection** facilities.
+
+Resolves dependencies **by type**.
+
 
 #### Field Injection
 ```java
@@ -153,6 +156,44 @@ public class PostController {
     }
 
     // ...
+}
+```
+
+| **Aspect**        | **Constructor Injection**                                                                                | **Setter Injection**                                                                                              | **Field Injection**                                                                                                                          |
+|-------------------|----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Conciseness**   | **Less concise**: Requires explicit constructors with parameters for each dependency.                    | **Moderate**: Requires setter methods but avoids constructor complexity.                                          | **Most concise**: No setters or constructors needed, dependencies injected directly into fields.                                             |
+| **Immutability**  | **High**: Once the object is created, its dependencies cannot change.                                    | **Low**: Dependencies can be modified at any time after the object is created.                                    | **Low**: Dependencies can be changed post-construction.                                                                                      |
+| **Flexibility**   | **Low**: All dependencies must be provided at construction time, limiting flexibility.                   | **High**: Dependencies can be set anytime after object creation.                                                  | **High**: Dependencies can be set anytime after object creation without any method call.                                                     |
+| **Dependencies**  | **Explicit**: Dependencies are required and clearly defined in the constructor.                          | **Implicit**: Dependencies can be set optionally via setters, which may not be immediately obvious.               | **Implicit**: Dependencies are injected directly into fields, making them hidden from the constructor or setter methods.                     |
+| **Encapsulation** | **High**: Dependencies are passed via constructor and are not directly accessible after object creation. | **Moderate**: Dependencies can be set or modified after object creation, breaking strict encapsulation.           | **Low**: Dependencies are directly injected into fields, bypassing encapsulation principles.                                                 |
+| **Testability**   | **High**: Dependencies can easily be mocked in unit tests, and all required dependencies are clear.      | **Moderate**: Dependencies can be mocked, but there's a risk of uninitialized dependencies if setters are missed. | **Low**: Harder to mock or test effectively, as dependencies are directly injected into fields and may not be visible or easily replaceable. |
+
+
+#### ◆ `@Resource`
+
+Similar to `@Autowired`, but resolves dependencies **by name** by default.
+
+If no bean with the specified name exists, **fall back** to injection **by type**.
+
+Can**not** be used for constructor injection.
+
+◾ **Default Behavior**
+```java
+@Component
+public class MyService {
+
+    @Resource
+    private MyRepository myRepo;  // Injected by name, i.e., myRepo
+}
+```
+
+◾ **With Explicit Bean Name**
+```java
+@Component
+public class MyService {
+
+    @Resource(name = "myRepositoryA")  // Injects the bean with the name 'myRepositoryA'
+    private MyRepository myRepository;
 }
 ```
 
@@ -603,11 +644,11 @@ public class Comment {
 Overriding may be needed.
 
 | Relationship Type | Default FetchType |
-|-------------------|--------------------|
-| `@OneToMany`      | `LAZY`             |
-| `@ManyToMany`     | `LAZY`             |
-| `@OneToOne`       | `EAGER`            |
-| `@ManyToOne`      | `EAGER`            |
+|-------------------|-------------------|
+| `@OneToMany`      | `LAZY`            |
+| `@ManyToMany`     | `LAZY`            |
+| `@OneToOne`       | `EAGER`           |
+| `@ManyToOne`      | `EAGER`           |
 
 
 

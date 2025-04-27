@@ -8,7 +8,9 @@
 * [x] HW6 - hw40-springboot-post
 * [x] HW7 - hw41-springboot-RUD
 * [x] HW8 - hw42-Spring-Data
-* [ ] HW9 - hw43-Spring-Basic
+* [x] HW9 - hw43-Spring-Basic
 * [ ] HW10 - hw44-Spring-MVC
 * [ ] HW11 - hw45-SpringSecurity
 * [ ] HW12 - hw46-testing
+* [ ] HW13 - hw50-microservice
+* [ ] HW14 - hw50-Kafka
