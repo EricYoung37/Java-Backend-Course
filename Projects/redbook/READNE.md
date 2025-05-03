@@ -11,7 +11,8 @@ Also, add this project in the **Maven** tool window if it is not there.
 
 ## Build and Run
 
-From IDEA's **Run / Debug Configurations**, set the **working directory** for `RedbookApplication.java` to be `$MODULE_WORKING_DIR$` (or the absolute path of `redbook`).
+From IDEA's **Run / Debug Configurations**, set the **working directory** for `RedbookApplication.java`
+to be `$MODULE_WORKING_DIR$` (or the absolute path of `redbook`).
 This ensures they are always launched from `redbook`, not the root repository.
 If they are launched from the root repository, they will fail to run because `redbook/.env`
 (needed by MySQL connection in `application.properties`)
@@ -23,7 +24,7 @@ when switching between the root repository and `redbook`.
 
 ## MySQL Connection
 
-In `redbook/.env` (create one if it doesn't exist), set the following parameters.
+In `redbook/.env` (create one if it doesn't exist), set the following variables.
 ```
 MYSQL_USER=
 MYSQL_PWD=
