@@ -11,7 +11,7 @@
 * [x] HW9 - hw43-Spring-Basic
 * [x] HW10 - hw44-Spring-MVC
 * [x] HW11 - hw45-SpringSecurity
-* [ ] HW12 - hw46-testing
+* [x] HW12 - hw46-testing
 * [ ] HW13 - hw50-microservice
 * [ ] HW14 - K8s
 * [ ] HW15 - [Cassandra Quiz](https://forms.gle/dika3ddN4LNnMKAL6)
