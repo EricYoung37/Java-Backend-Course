@@ -12,7 +12,8 @@
 * [x] HW10 - hw44-Spring-MVC
 * [x] HW11 - hw45-SpringSecurity
 * [x] HW12 - hw46-testing
-* [ ] HW13 - hw50-microservice&Kafka
-* [ ] HW14 - K8s
-* [ ] HW15 - [Cassandra Quiz](https://forms.gle/dika3ddN4LNnMKAL6)
-* [ ] HW16 - JavaScript-related
+* [x] HW14 - hw50-microservice
+* [ ] HW15 - hw50-Kafka
+* [ ] HW16 - K8s
+* [ ] HW17 - [Cassandra Quiz](https://forms.gle/dika3ddN4LNnMKAL6)
+* [ ] HW18 - JavaScript-related
