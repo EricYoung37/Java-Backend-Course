@@ -18,6 +18,16 @@ public class KafkaProducerServiceAtMostOnce extends AbstractKafkaProducerService
 
     @Override
     public void sendMessage(String key, String message) {
-        kafkaTemplate.send(topic, key, message);
+        try {
+            // Simulate random failures (30% chance)
+            if (Math.random() < 0.3) {
+                throw new RuntimeException("Simulated producer failure after send");
+            }
+
+            kafkaTemplate.send(topic, key, message).get(); // .get() makes it blocking;
+        } catch (Exception e) {
+            System.err.println("Failed to send message (won't retry): " + message);
+            e.printStackTrace();
+        }
     }
 }

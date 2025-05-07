@@ -21,10 +21,35 @@ public class KafkaController {
 
     // only one endpoint on purpose to demonstrate different handling approaches within inside Kafka
     @PostMapping("/publish")
-    public String publishMessage(@RequestParam("key") String key, @RequestParam("message") String message) {
+    public String publishMessage(@RequestParam("key") String key,
+                                 @RequestParam("message") String message) {
         kafkaProducerServiceAtLeastOnce.sendMessage(key, "[ALO] " + message);
         kafkaProducerServiceAtMostOnce.sendMessage(key, "[AMO] " + message);
         kafkaProducerServiceExactlyOnce.sendMessage(key, "[EO] " + message);
         return "Message published successfully";
+    }
+
+    // Test endpoint for at-least-once
+    @PostMapping("/test-at-least-once")
+    public String testAtLeastOnce(@RequestParam("key") String key,
+                                  @RequestParam("message") String message) {
+        kafkaProducerServiceAtLeastOnce.sendMessage(key, "[ALO-TEST] " + message);
+        return "At-least-once test message published";
+    }
+
+    // Test endpoint for at-most-once
+    @PostMapping("/test-at-most-once")
+    public String testAtMostOnce(@RequestParam("key") String key,
+                                 @RequestParam("message") String message) {
+        kafkaProducerServiceAtMostOnce.sendMessage(key, "[AMO-TEST] " + message);
+        return "At-most-once test message published";
+    }
+
+    // Test endpoint for exactly-once
+    @PostMapping("/test-exactly-once")
+    public String testExactlyOnce(@RequestParam("key") String key,
+                                  @RequestParam("message") String message) {
+        kafkaProducerServiceExactlyOnce.sendMessage(key, "[EO-TEST] " + message);
+        return "Exactly-once test message published";
     }
 }

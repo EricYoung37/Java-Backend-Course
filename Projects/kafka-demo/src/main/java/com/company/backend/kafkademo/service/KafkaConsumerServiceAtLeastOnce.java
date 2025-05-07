@@ -21,6 +21,10 @@ public class KafkaConsumerServiceAtLeastOnce extends AbstractKafkaConsumerServic
     )
     public void listenAtLeastOnce(String message, Acknowledgment acknowledgment) {
         try {
+            // Simulate random failures (30% chance)
+            if (Math.random() < 0.3) {
+                throw new RuntimeException("Simulated processing failure");
+            }
             handleMessage(message, groupId, topic);
             acknowledgment.acknowledge(); // Manual commit
         } catch (Exception e) {

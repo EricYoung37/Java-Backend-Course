@@ -19,7 +19,7 @@ public class KafkaProducerConfigAtLeastOnce extends AbstractKafkaProducerConfig 
         Map<String, Object> configProps = commonConfig();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.ACKS_CONFIG, "all");   // Wait for all replicas to acknowledge
-        configProps.put(ProducerConfig.RETRIES_CONFIG, 3);    // Retry up to 3 times
+        configProps.put(ProducerConfig.RETRIES_CONFIG, 6);    // Retry up to 6 times
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
