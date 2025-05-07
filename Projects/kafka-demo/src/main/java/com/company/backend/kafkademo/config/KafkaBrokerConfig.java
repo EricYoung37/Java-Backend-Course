@@ -15,8 +15,14 @@ public class KafkaBrokerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     public String bootstrapServers;
 
-    @Value("${kafka.topic.name}")
-    private String topicName;
+    @Value("${kafka.topic.at-least-once}")
+    private String atLeastOnceTopic;
+
+    @Value("${kafka.topic.at-most-once}")
+    private String atMostOnceTopic;
+
+    @Value("${kafka.topic.exactly-once}")
+    private String exactlyOnceTopic;
 
     private static final int NUM_PARTITIONS = 3;
     private static final short REPLICATION_FACTOR = 2;
@@ -29,10 +35,17 @@ public class KafkaBrokerConfig {
     }
 
     @Bean
-    public NewTopic createTopic() {
-        return new NewTopic(
-                topicName,
-                NUM_PARTITIONS,
-                REPLICATION_FACTOR);
+    public NewTopic atLeastOnceTopic() {
+        return new NewTopic(atLeastOnceTopic, NUM_PARTITIONS, REPLICATION_FACTOR);
+    }
+
+    @Bean
+    public NewTopic atMostOnceTopic() {
+        return new NewTopic(atMostOnceTopic, NUM_PARTITIONS, REPLICATION_FACTOR);
+    }
+
+    @Bean
+    public NewTopic exactlyOnceTopic() {
+        return new NewTopic(exactlyOnceTopic, NUM_PARTITIONS, REPLICATION_FACTOR);
     }
 }
