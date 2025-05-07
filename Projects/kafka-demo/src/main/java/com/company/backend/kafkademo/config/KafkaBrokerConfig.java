@@ -48,4 +48,12 @@ public class KafkaBrokerConfig {
     public NewTopic exactlyOnceTopic() {
         return new NewTopic(exactlyOnceTopic, NUM_PARTITIONS, REPLICATION_FACTOR);
     }
+
+    @Value("${kafka.topic.custom-partition}")
+    private String customPartitionTopic;
+
+    @Bean
+    public NewTopic customPartitionTopic() {
+        return new NewTopic(customPartitionTopic, NUM_PARTITIONS, REPLICATION_FACTOR);
+    }
 }

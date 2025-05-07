@@ -2,6 +2,7 @@ package com.company.backend.kafkademo.controller;
 
 import com.company.backend.kafkademo.service.KafkaProducerServiceAtLeastOnce;
 import com.company.backend.kafkademo.service.KafkaProducerServiceAtMostOnce;
+import com.company.backend.kafkademo.service.KafkaProducerServiceCustomPartition;
 import com.company.backend.kafkademo.service.KafkaProducerServiceExactlyOnce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,16 @@ public class KafkaController {
                                   @RequestParam("message") String message) {
         kafkaProducerServiceExactlyOnce.sendMessage(key, "[EO-TEST] " + message);
         return "Exactly-once test message published";
+    }
+
+    // Test endpoint for custom partition logic
+    @Autowired
+    private KafkaProducerServiceCustomPartition kafkaProducerServiceCustomPartition;
+
+    @PostMapping("/test-custom-partition")
+    public String publishWithCustomPartition(@RequestParam("key") String key,
+                                             @RequestParam("message") String message) {
+        kafkaProducerServiceCustomPartition.sendMessage(key, "[CUSTOM] " + message);
+        return "Message published with custom partitioning logic";
     }
 }
