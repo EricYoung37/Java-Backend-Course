@@ -45,5 +45,27 @@ Run `kafka-demo/KafkaDemoApplication.java`.
 
 In Postman,
 ```http request
-POST localhost:8088/publish?key={msg-key}&message={msg-content}
+# 1. Publish to Topics Related to Message Delivery Guarantee
+POST localhost:8088/publish?key=msgKey&message=msgContent
+
+
+# 2. Test Message Delivery Guarantee
+
+# Test At-Least-Once Guarantee
+POST localhost:8088/test-at-least-once?key=msg2&message=MayDuplicateButNoLoss2
+
+# Test At-Most-Once Guarantee
+POST localhost:8088/test-at-most-once?key=msg11&message=MayMissButNoDuplicate11
+
+# Test Exactly-Once Guarantee
+POST localhost:8088/test-exactly-once?key=msg1&message=NoLossNoDuplicate
+
+
+# 3. Test Custom Logic
+
+# Modulo Partitioning for Numeric Key
+POST localhost:8088/test-custom-partition?key=6&message=GoesToPartition0
+
+# Hashing for Non-Numeric Key
+POST localhost:8088/test-custom-partition?key=six&message=MayNotBePartition0
 ```
