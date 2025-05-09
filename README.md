@@ -17,3 +17,4 @@
 * [ ] HW15 - K8s
 * [ ] HW16 - [Cassandra Quiz](https://forms.gle/dika3ddN4LNnMKAL6)
 * [ ] HW17 - JavaScript-related
+* [x] HW18 - System Design Demo
