@@ -17,6 +17,20 @@ See directory [Coding/HW2/Question1](../Coding/HW2/Question1).
 | Common Examples       | `IOException`, `SQLException` | `NullPointerException`, `ArithmeticException`, `IndexOutOfBoundsException` |
 | Represents            | Recoverable situations        | Programming errors                                                         |
 
+```mermaid
+graph TD
+    Object["java.lang.Object"]
+    Throwable["java.lang.Throwable"]
+    Error["java.lang.Error"]
+    Exception["java.lang.Exception"]
+    RuntimeException["java.lang.RuntimeException"]
+
+    Object --> Throwable
+    Throwable --> Error
+    Throwable --> Exception
+    Exception --> RuntimeException
+```
+
 ### Checked Exception Example (`IOException`)
 ```java
 import java.io.*;

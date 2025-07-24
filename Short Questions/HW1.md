@@ -2,13 +2,14 @@
 **Author: M. Yang**
 
 ## Question 1
-> 3/4 Fundamental concepts of OOP
-> * Encapsulation
+> Fundamental concepts of Java OOP - A PIE
+> * [Abstraction—Question 16](#question-16)
 > * Polymorphism
 > * Inheritance
+> * Encapsulation (access modifiers, getter/setter)
 
 ```java
-// 1. Encapsulation
+// Encapsulation
 class Animal {
     private String name;
     private int age;
@@ -52,7 +53,7 @@ class Animal {
     }
 }
 
-// 2. Inheritance
+// Inheritance
 class Dog extends Animal {
     public Dog(String name, int age) {
         super(name, age);
@@ -101,7 +102,7 @@ public class Main {
 > Wrapper classes
 
 In Java, wrapper classes are object representations of the primitive data types.
-Each wrapper class wraps a primitive value inside an object.
+Each wrapper class wraps a **primitive value inside an object**.
 
 | Primitive Type | Wrapper Class |
 |----------------|---------------|
@@ -118,8 +119,8 @@ Each wrapper class wraps a primitive value inside an object.
 #### 1. To bring object-oriented features to primitives
 Java is an object-oriented language, but primitive types (int, double, etc.) are not objects.
 Wrapper classes provide a way to treat primitive values as objects, allowing them to:
-- Be stored in object-only structures (e.g., Collections)
-- Have methods and behavior (like parsing, comparing, converting)
+- Be stored in object-only structures (e.g., **Collections**)
+- Have **methods** and behavior (like parsing, comparing, converting)
 
 #### 2. To enable uniform treatment of data
 Java treats objects and primitives differently in many contexts.
@@ -128,13 +129,13 @@ simplifying APIs and tools that expect objects.
 
 #### 3. To enable features like nullability
 Primitive types can't be null, but objects can.
-Wrappers allow you to represent "no value" (null) — useful in databases, APIs, or optional fields.
+Wrappers allow you to represent "no value" (**null**) — useful in databases, APIs, or optional fields.
 
 
 ## Question 3
 > `HashMap` vs. `HashTable`
 
-| Feature                    | `HashMap`                                          | `Hashtable`                                  |
+| Feature                    | `HashMap`                                          | `HashTable`                                  |
 |----------------------------|----------------------------------------------------|----------------------------------------------|
 | **Thread Safety**          | ❌ Not synchronized (not thread-safe)               | ✅ Synchronized (thread-safe)                 |
 | **Performance**            | ✅ Faster (no synchronization overhead)             | ❌ Slower due to synchronization              |
@@ -162,7 +163,7 @@ Java does **not** create two objects. Instead, both `s1` and `s2` point to the *
 Instead of creating multiple copies of identical strings, Java stores only one copy in the pool.
 
 #### 2. To improve performance
-Reusing immutable string objects is faster than creating new ones — especially in applications where strings are used heavily (like web servers, compilers, parsers).
+**Reusing** immutable string objects is faster than creating new ones — especially in applications where strings are used heavily (like web servers, compilers, parsers).
 
 ### String Immunity
 In Java, String is **immutable**, meaning **once created, it cannot be changed**.
@@ -202,36 +203,36 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 ## Question 6
 > Access modifiers
 
-| Access Modifier | Scope                                                                                   |
-|-----------------|-----------------------------------------------------------------------------------------|
-| `public`        | Accessible from **anywhere** (same package or different package).                       |
-| `protected`     | Accessible within the **same package** and **subclasses** (even in different packages). |
-| `default`       | Accessible only within the **same package** (no modifier specified).                    |
-| `private`       | Accessible only within the **same class**.                                              |
+| Access Modifier | Scope                                                                                   | Implicitly Used if Not Declared    |
+|-----------------|-----------------------------------------------------------------------------------------|------------------------------------|
+| `public`        | Accessible from **anywhere** (same package or different package).                       | Interface methods                  |
+| `protected`     | Accessible within the **same package** and **subclasses** (even in different packages). |                                    |
+| `default`       | Accessible only within the **same package** (no modifier specified).                    | Interfaces, classes, class members |
+| `private`       | Accessible only within the **same class**.                                              |                                    |
 
 
 ## Question 7
 > `final` keyword
 
-| Modifier Context     | Purpose                                                          |
-|----------------------|------------------------------------------------------------------|
-| `final` with Fields  | Makes the field value **constant** after initialization.         |
-| `final` with Methods | **Prevents** the method from being **overridden** by subclasses. |
-| `final` with Classes | **Prevents** the class from being **extended**.                  |
+| Modifier Context     | Purpose         |
+|----------------------|-----------------|
+| `final` with Fields  | Constant        |
+| `final` with Methods | Not overridable |
+| `final` with Classes | Not extendable  |
 
 
 ## Question 8
 > `static` keyword
 
-| **Usage**                     | **Description**                                                                                                                          | **Example**                                                                        |
-|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| **Static Fields (Variables)** | Shared across all instances of the class. Same value for all objects.                                                                    | `static int count = 0;`                                                            |
-| **Static Methods**            | Belong to the class itself, not to an instance. Can be called without creating an object.                                                | Define: `public static void displayCount() {}`<br/> Invoke: `Counter.displayCount` |
-| **Static Nested Classes**     | A class inside another class that does **not reply on** an instance of the outer class. It can access static members of the outer class. | `static class NestedClass {}`                                                      |
+| **Usage**                    | **Description**                                                                                                                          | **Example**                                                                        |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| **Static Fields** | Shared across all instances of the class. Same value for all objects.                                                                    | `static int count = 0;`                                                            |
+| **Static Methods**           | Belong to the class itself, not to an instance. Can be called without creating an object.                                                | Define: `public static void displayCount() {}`<br/> Invoke: `Counter.displayCount` |
+| **Static Nested Classes**    | A class inside another class that does **not reply on** an instance of the outer class. It can access static members of the outer class. | `static class NestedClass {}`                                                      |
 
 
 ## Question 9
-> Overriding vs. Overloading
+> Polymorphism: Overriding vs. Overloading
 
 | **Feature**           | **Overloading**                                               | **Overriding**                                                                 |
 |-----------------------|---------------------------------------------------------------|--------------------------------------------------------------------------------|
@@ -308,7 +309,7 @@ A --> B --> C --> D
 ## Question 14
 > Polymorphism
 
-See [Question 1](#question-1) and [Question 9](#question-9).
+See [Question 1](#question-1), [Question 9](#question-9), [Question 10](#question-10).
 
 
 ## Question 15
@@ -328,7 +329,7 @@ For example, implementation, see [Question 1](#question-1).
 
 
 ## Question 16
-> Interface vs. Abstract Class
+> Abstraction: Interface vs. Abstract Class
 
 | **Feature**          | **Interface**                                                   | **Abstract Class**                                  |
 |----------------------|-----------------------------------------------------------------|-----------------------------------------------------|
