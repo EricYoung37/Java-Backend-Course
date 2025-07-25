@@ -546,7 +546,8 @@ Indicates `Current Entity : Annotated Field = 1 : N`.
 
 `mappedBy = {field_owned_by_the_other_entity}`.
 
-In JPA, the side **without** `mappedBy` is the **owning side** that controls the mapping.
+In JPA, the side **without** `mappedBy` is the **owning side** that controls the mapping,
+i.e., **the side managing the foreign key** (see [`@JoinColumn`](#-joincolumn)).
 
 ```java
 // package, imports
@@ -563,6 +564,10 @@ public class Post {
     // post is a field owned (mapped) by the Comment entity
 }
 ```
+
+**Clarification**
+- `Comment` is the owning side (JPA/DB mapping), writing to the join column.
+- `Post` is the parent (domain model / lifecycle), managing the children's lifecycle.
 
 
 ### ◆ `cascade`
@@ -629,7 +634,7 @@ public class Comment {
     // ...
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false) // For JPA, Comment is the owning side.
     private Post post;
 }
 ```

@@ -2,7 +2,7 @@
 **Author: M. Yang**
 
 ## Question 1
-> Spring data-related annotations
+> Spring Data Annotations
 
 See [Spring-Boot-Annotations.md - Persistence Layer](Spring-Boot-Annotations.md#4-persistence-layer-jpahibernate).
 
