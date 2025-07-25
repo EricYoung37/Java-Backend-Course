@@ -7,10 +7,13 @@
 See [HW2 Question9](HW2.md#singleton)
 
 ## Question 3
-> Ways to create threads
+> Thread Creation
+> - Extend `Thread`
+> - Implement `Runnable` (usually with `Thread`)
+> - Implement `Callable` (usually with `ExecutorService`)
+> - ThreadPool (`ExecutorService` with `Runnable` or `Callable`)
 
-### 1. Using `Thread`
-#### Extend `Thread`
+### 1. Extend `Thread`
 ```java
 class MyThread extends Thread {
     @Override
@@ -27,8 +30,7 @@ public class Main {
 }
 ```
 
-### 2. Using `Runnable` (usually with `Thread`)
-#### Implement `Runnable`
+### 2. Implement `Runnable` (usually with `Thread`)
 ```java
 class MyRunnable implements Runnable {
     @Override
@@ -75,8 +77,7 @@ public class Main {
 </details>
 
 
-### 3. Using `Callable` (usually with `ExecutorService`)
-#### Implement `Callable`
+### 3. Implement `Callable` (usually with `ExecutorService`)
 ```java
 import java.util.concurrent.*;
 
@@ -153,7 +154,7 @@ public class Main {
 
 </details>
 
-### 4. Using Thread Pool (`ExecutorService`)
+### 4. Thread Pool (`ExecutorService`)
 #### With `Runnable` & Lambda
 
 Output is **out of order**.
@@ -217,11 +218,28 @@ public class Main {
 ## Question 5
 > `start()` vs. `run()`
 
-| Aspect                | `start()` | `run()`                     |
-|-----------------------|-----------|-----------------------------|
-| Creates new thread    | Yes       | No                          |
-| Executes concurrently | Yes       | No (runs in current thread) |
+| Feature            | `run()` | `start()` |
+|--------------------|---------|-----------|
+| Creates new thread | No      | Yes       |
 
+```java
+public class Examples {
+    public static void main(String[] args) {
+        // 1. run example
+        Runnable runTask = () -> {
+            System.out.println("Running in: " + Thread.currentThread().getName());
+        };
+        runTask.run(); // runs in current thread
+       
+       // 2. start example
+       Runnable startTask = () -> {
+           System.out.println("Running in: " + Thread.currentThread().getName());
+       };
+       Thread t = new Thread(startTask);
+       t.start(); // runs in new thread
+    }
+}
+```
 
 ## Question 6
 > Which is the better way to create a thread: `Thread` or `Runnable`?
@@ -231,7 +249,7 @@ The `Runnable` interface is generally the preferred approach due to its flexibil
 | **Aspect**                | **`Thread` Class**                                 | **`Runnable` Interface**                                                     |
 |---------------------------|----------------------------------------------------|------------------------------------------------------------------------------|
 | **Thread Management**     | Manages its own thread                             | Requires a `Thread` or `ExecutorService` to manage the thread                |
-| **Task Logic and Thread** | Both task logic and thread management are coupled  | Task logic is separated from thread management                               |
+| **Task Logic and Thread** | Both task logic and thread management are coupled  | **Task logic is separated from thread management**                               |
 | **Reusability**           | Can only extend `Thread`, reducing flexibility     | Can be reused with `Thread`, `ExecutorService`, etc.                         |
 | **Usage**                 | Suitable for simple tasks or quick implementations | Preferred for complex tasks, scalability, and when task separation is needed |
 
@@ -424,19 +442,21 @@ public class DeadlockSolutionWithTryLock {
 ```
 Expected outputs (**no** deadlock in all cases):
 
-| Scenario                                | Output                                                                               |
-|-----------------------------------------|--------------------------------------------------------------------------------------|
-| Thread 1 acquires both locks            | `Thread 1: Locked both resources`<br>`Thread 2: Could not acquire both locks`        |
-| Thread 2 acquires both locks            | `Thread 2: Locked both resources`<br>`Thread 1: Could not acquire both locks`        |
-| Both acquire one, fail on the other     | `Thread 1: Could not acquire both locks`<br>`Thread 2: Could not acquire both locks` |
-| One gets a lock, the other gets nothing | Either both fail, or one may succeed later                                           |
-| Both fail to get any locks              | `Thread 1: Could not acquire both locks`<br>`Thread 2: Could not acquire both locks` |
+| Scenario                            | Output                                                                               |
+|-------------------------------------|--------------------------------------------------------------------------------------|
+| Thread 1 acquires both locks        | `Thread 1: Locked both resources`<br>`Thread 2: Could not acquire both locks`        |
+| Thread 2 acquires both locks        | `Thread 2: Locked both resources`<br>`Thread 1: Could not acquire both locks`        |
+| Both acquire one, fail on the other | `Thread 1: Could not acquire both locks`<br>`Thread 2: Could not acquire both locks` |
+| Both acquire two locks              | `Thread 1: Locked both resources` <br> `Thread 2: Locked both resources`             |
 
 
 ## Question 9
 > Communication between threads
 
 ### Use `Synchronized` and `wait()`, `notify()`, `notifyAll()`
+
+See [Question 10](#question-10) for explanation about `synchronized` instance methods (object lock).
+
 ```java
 import java.util.*;
 
@@ -620,20 +640,94 @@ class VolatileExample {
 
 
 ## Question 10
-> Class lock vs. Object lock
+> Object lock vs. Class lock
 
-| Aspect               | Object Lock (`this`)              | Class Lock (`MyClass.class`)           |
-|----------------------|-----------------------------------|----------------------------------------|
-| Applies To           | One object instance               | The entire class (all instances)       |
-| Used In              | `synchronized` instance methods   | `synchronized` static methods          |
-| Lock Target          | `this`                            | `MyClass.class`                        |
-| Shared Between       | Threads accessing same object     | All threads accessing class-level lock |
+| Aspect         | Object Lock (`this`)                | Class Lock (`MyClass.class`)           |
+|----------------|-------------------------------------|----------------------------------------|
+| Applies To     | One object instance                 | The entire class (all instances)       |
+| Used In        | `synchronized` **instance methods** | `synchronized` **static methods**      |
+| Lock Target    | `this`                              | `MyClass.class`                        |
+| Shared Between | Threads accessing same object       | All threads accessing class-level lock |
 
+### Object Lock Example
+
+Only one thread at a time can execute a synchronized instance method on the same object.
+
+```java
+class MyClass {
+   public synchronized void doSomething1() {
+       // method body
+   }
+   
+   public synchronized void doSomething2() {
+      // method body
+   }
+   /*// equivalent to
+   public void doSomething2() {
+      synchronized (this) {
+         // method body
+      }
+   }*/
+}
+```
+
+### Class Lock Example
+
+Only one thread at a time can execute any synchronized static method of that class, across all instances.
+
+```java
+class MyClass {
+    public static synchronized void doStaticWork1() {
+        // method body
+    }
+    
+    public static synchronized void doStaticWork2() {
+        // method body
+    }
+    /*// equivalent to
+    public static void doStaticWork2() {
+        synchronized (MyClass.class) {
+            // method body
+        }
+    }*/
+}
+```
 
 ## Question 11
 > `join()`
 
 The `join()` method in Java is used to **pause the current thread** until the thread on which `join()` is called completes its execution.
+
+```java
+public class JoinExample {
+    public static void main(String[] args) {
+        Thread worker = new Thread(() -> {
+            System.out.println("Worker thread started.");
+            try {
+                Thread.sleep(2000); // Simulate work with sleep
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Worker thread finished.");
+        });
+
+        worker.start();
+
+        try {
+            worker.join(); // Wait for worker thread to finish
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Main thread continues after worker thread.");
+        
+        /*Output:
+        Worker thread started.
+        Worker thread finished.
+        Main thread continues after worker thread.*/
+    }
+}
+```
 
 
 ## Question 12
@@ -839,11 +933,11 @@ public class AtomicReferenceExample {
 ## Question 20
 > Types of locks and their advantages.
 
-| **Lock Type**       | **Description**                                                                                                                                                                   | **Advantages**                                                                                                                                                                                                                                                                                   |
-|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Reentrant Lock**  | A lock that allows the thread holding it to re-enter and acquire the lock again. It provides methods like `lock()`, `unlock()`, and `tryLock()`.                                  | • Fairness (can ensure the longest waiting thread gets the lock).<br>• **Prevents deadlock when a thread needs to acquire the lock multiple times.**<br>• Non-blocking lock attempts using `tryLock()`.                                                                                          |
-| **Read/Write Lock** | A lock that allows multiple threads to read concurrently but ensures only one thread can write at a time. `ReentrantReadWriteLock` is a typical implementation.                   | • Allows **concurrent reads** for high-performance read-heavy workloads.<br>• Ensures exclusive access for write operations.<br>• Increased throughput for reads.<br>• Fairness can be enabled, preventing thread starvation.                                                                    |
-| **Stamped Lock**    | A lock that provides three modes: write, read, and optimistic read. Optimistic reads do not require locking unless a write occurs. It is designed for high-performance scenarios. | • **Optimistic reads** to **avoid locking** and improve **performance**.<br>• Non-blocking reads with `tryOptimisticRead()`.<br>• Better scalability for read-heavy workloads.<br>• Reduces contention by allowing optimistic reads.<br>• Provides traditional write locks for exclusive access. |
+| **Lock Type**       | **Description**                                                                                                                                                                                      | **Advantages**                                                                                                                                                                                                                                                                                   |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Reentrant Lock**  | A lock that allows the thread holding it to re-enter and acquire the lock again. It provides methods like `lock()`, `unlock()`, and `tryLock()`.                                                     | • Fairness (can ensure the longest waiting thread gets the lock).<br>• **Prevents deadlock when a thread needs to acquire the lock multiple times.**<br>• Non-blocking lock attempts using `tryLock()`.                                                                                          |
+| **Read/Write Lock** | A lock that allows multiple threads to read concurrently but ensures only one thread can write at a time. `ReentrantReadWriteLock` is a typical implementation.                                      | • Allows **concurrent reads** for high-performance read-heavy workloads.<br>• Ensures exclusive access for write operations.<br>• Increased throughput for reads.<br>• Fairness can be enabled, preventing thread starvation.                                                                    |
+| **Stamped Lock**    | A lock that provides three modes: write, read, and optimistic read. Optimistic reads do not require locking unless a write occurs. It is designed for high-performance scenarios. **Not reentrant.** | • **Optimistic reads** to **avoid locking** and improve **performance**.<br>• Non-blocking reads with `tryOptimisticRead()`.<br>• Better scalability for read-heavy workloads.<br>• Reduces contention by allowing optimistic reads.<br>• Provides traditional write locks for exclusive access. |
 
 
 ## Question 21
@@ -854,7 +948,7 @@ public class AtomicReferenceExample {
 `Future` is an **interface** that represents the result of an asynchronous computation.
 It provides methods for checking if the computation is complete, waiting for its completion, and retrieving the result.
 
-`CompletableFuture` is an implementing **class** of `Future` that supports a wide range of asynchronous operations, error handling, and task composition.
+`CompletableFuture` is an implementing **class** of `Future` that supports a wide range of asynchronous operations, **error handling**, and **task composition**.
 
 <details>
 <summary>Main Methods</summary>
