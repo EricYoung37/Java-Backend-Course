@@ -694,41 +694,111 @@ class MyClass {
 ```
 
 ## Question 11
-> `join()`
+> `join()` in `java.lang.Thread`
 
 The `join()` method in Java is used to **pause the current thread** until the thread on which `join()` is called completes its execution.
 
 ```java
 public class JoinExample {
     public static void main(String[] args) {
-        Thread worker = new Thread(() -> {
-            System.out.println("Worker thread started.");
-            try {
-                Thread.sleep(2000); // Simulate work with sleep
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Worker thread finished.");
-        });
+       Thread t = new Thread(() -> {
+          System.out.println("Child thread: Hi");
+          try {
+             Thread.sleep(2000);  // simulate work
+          } catch (InterruptedException e) {
+             e.printStackTrace();
+          }
+          System.out.println("Child thread: Bye");
+       });
 
-        worker.start();
+       t.start();
 
-        try {
-            worker.join(); // Wait for worker thread to finish
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+       System.out.println("Main thread: Hello");  // this runs while t is sleeping
 
-        System.out.println("Main thread continues after worker thread.");
-        
-        /*Output:
-        Worker thread started.
-        Worker thread finished.
-        Main thread continues after worker thread.*/
+       t.join();  // main thread blocks here until t is done
+
+       System.out.println("Main thread: See ya");
     }
 }
 ```
+Output
+```
+Child thread: Hi
+Main thread: Hello
+Child thread: Bye
+Main thread: See ya
+```
+Without `join()`, the output is likely to be
+```
+Child thread: Hi
+Main thread: Hello
+Main thread: See ya
+Child thread: Bye
+```
 
+> Fork/Join Framework (since Java 7)
+> - Found in `java.util.concurrent.RecursiveTask` and `RecursiveAction`.
+> - Enables efficient **divide-and-conquer** parallelism.
+> - `fork()` starts a subtask asynchronously.
+> - `join()` waits for its completion and gets the result.
+
+```java
+import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.ForkJoinPool;
+
+public class ForkJoinSumExample {
+
+    // RecursiveTask that calculates sum of part of an array
+    static class SumTask extends RecursiveTask<Long> {
+        private static final int THRESHOLD = 5;
+        private int[] nums;
+        private int start;
+        private int end;
+
+        public SumTask(int[] nums, int start, int end) {
+            this.nums = nums;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        protected Long compute() {
+            if (end - start <= THRESHOLD) {
+                // Base case: do it directly
+                long sum = 0;
+                for (int i = start; i < end; i++) {
+                    sum += nums[i];
+                }
+                return sum;
+            } else {
+                // Split task
+                int mid = (start + end) / 2;
+                SumTask leftTask = new SumTask(nums, start, mid);
+                SumTask rightTask = new SumTask(nums, mid, end);
+
+                leftTask.fork();                // Start a new thread
+                long rightResult = rightTask.compute(); // Compute in current thread
+                long leftResult = leftTask.join();      // Join left task
+
+                return leftResult + rightResult;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] numbers = new int[10];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = i + 1;  // 1 to 10
+        }
+
+        ForkJoinPool pool = new ForkJoinPool();
+        SumTask task = new SumTask(numbers, 0, numbers.length);
+        long result = pool.invoke(task);
+
+        System.out.println("Sum = " + result); // Should print 55
+    }
+}
+```
 
 ## Question 12
 > `yield()`

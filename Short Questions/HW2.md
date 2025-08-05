@@ -428,3 +428,89 @@ This means that existing code should not be changed, but the behavior should be 
 > *If class B is a subtype of class A, then object of type A may be substituted with any object of type B.*
 
 This means that if the object of type A can do something, the object of type B can also do it.
+
+
+## Question 12
+> `HashMap` vs `LinkedHashMap` vs `TreeMap`
+> - `HashSet<E>` uses a `HashMap<E, Object>` internally
+
+| Feature                  | `HashMap`                                                                                              | `LinkedHashMap`                                                                                | `TreeMap`                                          |
+|--------------------------|--------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| **Underlying Structure** | **Resizable** array of buckets; each bucket is a singly linked list or red-black tree (for collisions) | Same as HashMap **plus** a **global doubly** linked list linking all entries to preserve order | Red-black tree (self-balancing binary search tree) |
+| Order                    | Unordered                                                                                              | Insertion / Access order                                                                       | Sorted by key                                      |
+| Performance (get/put)    | `O(1)` avg                                                                                             | `O(1)` avg                                                                                     | `O(log n)`                                         |
+| Null Keys                | 1 allowed                                                                                              | 1 allowed                                                                                      | Not allowed                                        |
+| Null Values              | Allowed                                                                                                | Allowed                                                                                        | Allowed                                            |
+| Thread Safety            | Not thread-safe                                                                                        | Not thread-safe                                                                                | Not thread-safe                                    |
+| Use Case                 | Fast lookups                                                                                           | Order preservation                                                                             | Sorted keys                                        |
+
+### `HashMap` Structure
+```mermaid
+graph TD
+  subgraph TableArray
+    direction TB
+    Bucket0["table[0]"]
+    Bucket1["table[1]"]
+    Bucket2["table[2]"]
+  end
+
+  Bucket0 --> Node1[/"Node(key1)"/]
+  Node1 --> NodeX["Node(keyX)"]
+  NodeX --> null0["null"]
+
+  Bucket1 --> null1["null"]
+
+  Bucket2 --> TreeRoot["TreeNode(key5)"]
+
+  %% Tree structure under Bucket2
+  TreeRoot --> TreeLeft["TreeNode(key3)"]
+  TreeRoot --> TreeRight["TreeNode(key7)"]
+
+  TreeLeft --> TreeLeftLeft["TreeNode(key1)"]
+  TreeLeft --> TreeLeftRight["TreeNode(key4)"]
+
+  TreeRight --> TreeRightLeft["TreeNode(key6)"]
+  TreeRight --> TreeRightRight["TreeNode(key9)"]
+```
+
+### `LinkedHashMap` Structure
+```mermaid
+graph TD
+
+  %% Buckets (hash table)
+  subgraph TableArray
+    direction TB
+    B0["table[0]"]
+    B1["table[1]"]
+    B2["table[2]"]
+  end
+
+  %% Bucket chains
+  B0 --> N1["Node(key1)"]
+  N1 --> N2["Node(key3)"]
+  N2 --> null0["null"]
+
+  B1 --> null1["null"]
+
+  B2 --> T1["TreeNode(key5)"]
+
+  T1 --> T2["TreeNode(key4)"]
+  T1 --> T3["TreeNode(key7)"]
+
+  %% Doubly linked list for insertion order (global)
+  subgraph InsertionOrder
+    direction LR
+    N1b["Node(key1)"]
+    N2b["Node(key3)"]
+    T1b["TreeNode(key5)"]
+  end
+
+  %% Doubly linked list links
+  N1b -->|after| N2b
+  N2b -->|after| T1b
+  T1b -->|after| nullB["null"]
+
+  N2b -->|before| N1b
+  T1b -->|before| N2b
+  nullB -->|before| T1b
+```
