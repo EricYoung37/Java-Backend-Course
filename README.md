@@ -14,7 +14,7 @@
 * [x] [HW12](./Short%20Questions/HW12.md) - hw46-testing
 * [x] [HW13](./Short%20Questions/HW13.md) - hw50-microservice
 * [x] [HW14](./Short%20Questions/HW14.md) - hw50-Kafka
-* [ ] HW15 - K8s
+* [ ] [HW15](./Short%20Questions/HW15.md) - K8s
 * [x] [HW16](./Short%20Questions/HW16.md) - [Cassandra Quiz](https://forms.gle/dika3ddN4LNnMKAL6)
 * [ ] HW17 - JavaScript-related
 * [x] [HW18](./Short%20Questions/HW18.md) - System Design Demo
