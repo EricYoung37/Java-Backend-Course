@@ -876,10 +876,28 @@ public class PostServiceImpl implements PostService {
 ※ To use `GlobalExceptionHandler` instead, remove `@ResponseStatus`.
 The exception will **bubble up** to `@ControllerAdvice`.
 
+
+
+## 6. Aspect Oriented Programming
+
+### ◆ `@Aspect`
+
+### ◆ `@Pointcut`
+
+### ◆ `@Before`
+
+### ◆ `@After`
+
+### ◆ `@AfterReturning`
+
+### ◆ `@AfterThrowing`
+
+### ◆ `@Around`
+
 ------------
 
 
 **References**
 - [Spring Boot API](https://docs.spring.io/spring-boot/api/java/index.html)
 - [gindex/spring-boot-annotation-list](https://github.com/gindex/spring-boot-annotation-list)
-- [CTYue/springboot-redbook](https://github.com/CTYue/springboot-redbook/tree/07_01_validation/src/main/java/com/chuwa/redbook)
+- [CTYue/springboot-redbook](https://github.com/CTYue/springboot-redbook/tree/09_01_AOP)

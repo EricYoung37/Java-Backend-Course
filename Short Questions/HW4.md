@@ -268,9 +268,11 @@ The `Runnable` interface is generally the preferred approach due to its flexibil
 
 
 ## Question 8
-> Deadlock and possible solutions
+> Deadlock
 
-Deadlock describes a situation where two or more threads are blocked forever, waiting for each other.
+A deadlock occurs when **two or more** threads **waiting for each other** are **blocked forever**.
+
+**Runtime** programmatical detection `ThreadMXBean.findDeadlockedThreads()`.
 
 ### Example
 ```java
@@ -871,7 +873,7 @@ The key interface that provides the core thread pool functionality is `ExecutorS
 ## Question 15
 > How to submit a task to a thread pool?
 
-See [Question 3](#4-using-thread-pool-executorservice)
+See [Question 3](#4-thread-pool-executorservice)
 
 
 ## Question 16
@@ -1005,15 +1007,13 @@ public class AtomicReferenceExample {
 
 | **Lock Type**       | **Description**                                                                                                                                                                                      | **Advantages**                                                                                                                                                                                                                                                                                   |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Reentrant Lock**  | A lock that allows the thread holding it to re-enter and acquire the lock again. It provides methods like `lock()`, `unlock()`, and `tryLock()`.                                                     | • Fairness (can ensure the longest waiting thread gets the lock).<br>• **Prevents deadlock when a thread needs to acquire the lock multiple times.**<br>• Non-blocking lock attempts using `tryLock()`.                                                                                          |
+| **Reentrant Lock**  | A lock that allows the thread holding it to re-enter and acquire the lock again. It provides methods like `lock()`, `unlock()`, and `tryLock()`.                                                     | • Allows **fairness** via `new ReentrantLock(true)` (ensure the longest waiting thread gets the lock).<br>• **Prevents deadlock when a thread needs to acquire the lock multiple times.**<br>• Non-blocking lock attempts using `tryLock()`.                                                     |
 | **Read/Write Lock** | A lock that allows multiple threads to read concurrently but ensures only one thread can write at a time. `ReentrantReadWriteLock` is a typical implementation.                                      | • Allows **concurrent reads** for high-performance read-heavy workloads.<br>• Ensures exclusive access for write operations.<br>• Increased throughput for reads.<br>• Fairness can be enabled, preventing thread starvation.                                                                    |
 | **Stamped Lock**    | A lock that provides three modes: write, read, and optimistic read. Optimistic reads do not require locking unless a write occurs. It is designed for high-performance scenarios. **Not reentrant.** | • **Optimistic reads** to **avoid locking** and improve **performance**.<br>• Non-blocking reads with `tryOptimisticRead()`.<br>• Better scalability for read-heavy workloads.<br>• Reduces contention by allowing optimistic reads.<br>• Provides traditional write locks for exclusive access. |
 
 
 ## Question 21
 > `Future` vs. `CompletableFuture`
-> 
-> Main methods for `CompletableFuture`
 
 `Future` is an **interface** that represents the result of an asynchronous computation.
 It provides methods for checking if the computation is complete, waiting for its completion, and retrieving the result.
@@ -1021,7 +1021,7 @@ It provides methods for checking if the computation is complete, waiting for its
 `CompletableFuture` is an implementing **class** of `Future` that supports a wide range of asynchronous operations, **error handling**, and **task composition**.
 
 <details>
-<summary>Main Methods</summary>
+<summary>Common CompletableFuture Methods</summary>
 
 | **Method**                                                        | **Description**                                                                                                                |
 |-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
@@ -1038,6 +1038,75 @@ It provides methods for checking if the computation is complete, waiting for its
 | `handle(BiFunction<T, Throwable, U> fn)`                          | Handles both normal and exceptional completion. Returns a new `CompletableFuture<U>` after processing the result or exception. |
 </details>
 
+<details>
+<summary>Examples</summary>
+
+### Resultful `Future`
+```java
+public String getFuture() {
+   ExecutorService executor = Executors.newSingleThreadExecutor();
+   
+   try {
+      Callable<String> task = () -> {
+         Thread.sleep(2000); // Simulate work
+         return "Task completed!";
+      };
+
+      Future<String> future = executor.submit(task);
+      return future.get(); // Blocks until result is ready
+
+   } catch (InterruptedException | ExecutionException e) {
+      throw new RuntimeException(e);
+   } finally {
+      executor.shutdown();
+   }
+}
+```
+
+### Resultless `CompletableFuture`
+```java
+public void runCompletableFuture() {
+    // Run a task specified by a Runnable Object asynchronously.
+    CompletableFuture<Void> future = CompletableFuture.runAsync(new Runnable() {
+        @Override
+        public void run() {
+            // Simulate a long-running Job
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+            System.out.println("I'll run in a separate thread than the main thread.");
+        }
+    });
+
+    // Block and wait for the future to complete
+    future.get();
+}
+```
+
+### Resultful `CompletableFuture`
+```java
+public String getCompletableFuture() {
+   // Run a task specified by a Supplier object asynchronously
+   CompletableFuture<String> future = CompletableFuture.supplyAsync(new Supplier<String>() {
+      @Override
+      public String get() {
+         try {
+            TimeUnit.SECONDS.sleep(1);
+         } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+         }
+         return "Result of the asynchronous computation";
+      }
+   });
+
+   // Block and get the result of the Future
+   String result = future.get();
+   System.out.println(result);
+}
+```
+</details>
 
 ## Question 23
 > Create two threads. One prints 1, 3, 5, 7, 9, and the other prints 2, 4, 6, 8, 10.
@@ -1232,3 +1301,128 @@ See [Coding/HW3/Question25/src/AsyncJsonFetcher.java](../Coding/HW4/Question25/s
 > return a default value and log the exception information.
 
 See [Coding/HW3/Question25/src/AsyncJsonFetcher2.java](../Coding/HW4/Question25/src/AsyncJsonFetcher2.java)
+
+
+## Question 26
+> Thread Starvation
+
+Thread starvation occurs when some threads **never get CPU time** because some **other threads keep occupying the CPU**.
+
+### Causes
+1. Some threads keep re-enter a `synchronized` block, while other threads remain blocked forever trying to enter the block.
+2. The `notify()` method makes no guarantee about what thread is awakened if multiple thread have called `wait()`, and some threads remain waiting forever.
+
+### Solutions
+1. Use `ReentrantLock` with fairness (`new ReentrantLock(true)`) to ensure the longest-waiting thread gets the lock first.
+2. `Semaphore`, `BlockingQueue`, and other concurrency utilities in `java.util.concurrent` also have fair variants.
+
+
+## Question 27
+> Reactive Stream
+
+Reactive stream is a **specification** and programming pattern for handling **asynchronous data streams** with **non-blocking backpressure**.
+
+It is designed to allow a producer of data and a consumer of data to interact in a way that:
+- Does not block threads unnecessarily
+- Prevents the producer from overwhelming the consumer (via backpressure)
+- Works well for infinite or continuous streams of data, not just fixed collections
+
+| Interface         | Purpose                                                            |
+|-------------------|--------------------------------------------------------------------|
+| `Publisher<T>`    | Emits items to subscribers                                         |
+| `Subscriber<T>`   | Receives items from a publisher                                    |
+| `Subscription`    | Link between publisher and subscriber; used to request/cancel data |
+| `Processor<T, R>` | Acts as both a subscriber and a publisher (for transforming data)  |
+
+<details>
+<summary>Example</summary>
+
+```java
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+
+public class ReactiveStreamExample {
+   public static void main(String[] args) {
+      SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+
+      Flow.Processor<String, String> processor = new Flow.Processor<>() {
+         private Flow.Subscription subscription;
+         private final SubmissionPublisher<String> delegate = new SubmissionPublisher<>();
+
+         @Override
+         public void subscribe(Flow.Subscriber<? super String> subscriber) {
+            delegate.subscribe(subscriber); // forward to delegate publisher
+         }
+
+         @Override
+         public void onSubscribe(Flow.Subscription subscription) {
+            this.subscription = subscription;
+            subscription.request(1);
+         }
+
+         @Override
+         public void onNext(String item) {
+            delegate.submit(item.toUpperCase()); // transform & publish
+            subscription.request(1);
+         }
+
+         @Override
+         public void onError(Throwable throwable) {
+            delegate.closeExceptionally(throwable);
+         }
+
+         @Override
+         public void onComplete() {
+            delegate.close();
+         }
+      };
+
+      Flow.Subscriber<String> subscriber = new Flow.Subscriber<>() {
+         private Flow.Subscription subscription;
+
+         @Override
+         public void onSubscribe(Flow.Subscription subscription) {
+            this.subscription = subscription;
+            subscription.request(1);
+         }
+
+         @Override
+         public void onNext(String item) {
+            System.out.println("Received: " + item);
+            subscription.request(1);
+         }
+
+         @Override
+         public void onError(Throwable throwable) {
+            throwable.printStackTrace();
+         }
+
+         @Override
+         public void onComplete() {
+            System.out.println("Done");
+         }
+      };
+
+      // Connect: Publisher → Processor → Subscriber
+      publisher.subscribe(processor);
+      processor.subscribe(subscriber);
+
+      publisher.submit("hello");
+      publisher.submit("reactive");
+      publisher.submit("stream");
+
+      publisher.close();
+   }
+}
+```
+</details>
+
+> `CompletableFuture` vs Reactive Stream
+
+| Feature          | `CompletableFuture`                                   | Reactive Stream                                                          |
+|------------------|-------------------------------------------------------|--------------------------------------------------------------------------|
+| **Purpose**      | Represents a *single* asynchronous computation result | Represents a *stream* (potentially infinite) of asynchronous data        |
+| **Nature**       | One value (or exception)                              | Multiple values over time                                                |
+| **Backpressure** | No backpressure (producer can complete immediately)   | Built-in backpressure support                                            |
+| **Java Version** | Introduced in Java 8                                  | Standardized in Java 9 (`Flow` API)                                      |
+| **Typical Use**  | Async tasks, parallel computations, API calls         | Continuous event/data processing (e.g., Kafka, WebSockets, reactive web) |
