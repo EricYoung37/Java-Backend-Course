@@ -9,10 +9,19 @@
 - [`CompletableFuture`](HW4.md#question-21)
 - [Reactive Stream](HW4.md#question-27)
 - [Fork/Join in Java](HW4.md#question-11)
+- [JVM Optimization for Method Execution (3 Techniques)](HW1.md#question-17)
+- [Streams Under the Hood](HW3.md#question-16)
+- [`record` & Immutability](HW1.md#question-18)
+- [New Features in Java 17](HW1.md#question-19)
+- [The Class Loading Process](HW1.md#question-13)
 
 ## Spring
+- [`BeanFactory` vs. `ApplicationContext`](HW9.md#question-13)
+- [Bean Scopes](HW9.md#question-14)
 
 ## Kubernetes
+- [ClusterIP vs. NodePort vs. LoadBalancer](HW15.md#question-3)
+- [Ingress Controller](HW15.md#question-4)
 
 ## Procedure
 

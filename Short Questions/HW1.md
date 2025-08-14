@@ -184,7 +184,7 @@ If strings could change, they can't be reused safely from the pool.
 
 
 ## Question 5
-> Garbage collection
+> Garbage Collector Types
 
 Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **automatically reclaims memory** by removing objects that are **no longer reachable or needed**.
 
@@ -224,11 +224,11 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 ## Question 8
 > `static` keyword
 
-| **Usage**                    | **Description**                                                                                                                          | **Example**                                                                        |
-|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| **Static Fields** | Shared across all instances of the class. Same value for all objects.                                                                    | `static int count = 0;`                                                            |
-| **Static Methods**           | Belong to the class itself, not to an instance. Can be called without creating an object.                                                | Define: `public static void displayCount() {}`<br/> Invoke: `Counter.displayCount` |
-| **Static Nested Classes**    | A class inside another class that does **not reply on** an instance of the outer class. It can access static members of the outer class. | `static class NestedClass {}`                                                      |
+| **Usage**                 | **Description**                                                                                                                          | **Example**                                                                        |
+|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| **Static Fields**         | Shared across all instances of the class. Same value for all objects.                                                                    | `static int count = 0;`                                                            |
+| **Static Methods**        | Belong to the class itself, not to an instance. Can be called without creating an object.                                                | Define: `public static void displayCount() {}`<br/> Invoke: `Counter.displayCount` |
+| **Static Nested Classes** | A class inside another class that does **not reply on** an instance of the outer class. It can access static members of the outer class. | `static class NestedClass {}`                                                      |
 
 
 ## Question 9
@@ -292,8 +292,8 @@ The Java load sequence (also called the **class loading and initialization seque
 
 ```mermaid
 flowchart TD
-    A[Loading<br/>- ClassLoader loads .class file into memory<br/>- Class object created]
-    B[Linking<br/>a. Verification<br/>- Bytecode is checked for correctness<br/>b. Preparation<br/>- Static fields allocated with default values<br/>c. Resolution<br/>- Symbolic references resolved to direct references]
+    A["Loading<br/>- ClassLoader loads .class file (bytecode) into memory<br/>- Class object created"]
+    B["Linking<br/>a. Verification<br/>- Bytecode is checked for correctness<br/>b. Preparation<br/>- Static fields allocated with default values<br/>c. Resolution<br/>- Symbolic references (e.g., classes, interfaces, fields, methods, etc.) resolved to direct references"]
     C[" Initialization<br/>- Static blocks executed<br/>- Static fields assigned real values<br/>- &ltclinit&gt() method runs (if present)"]
     D[" Instantiation (Optional)<br/>- Object is created (heap)<br/>- Constructor is called"]
 
@@ -340,3 +340,170 @@ For example, implementation, see [Question 1](#question-1).
 | **Access Modifiers** | Methods are `public` by default                                 | Methods can have any access modifiers               |
 | **Inheritance**      | A class can implement multiple interfaces                       | A class can only extend one abstract class          |
 | **Default Methods**  | From Java 8 onwards, can have **default methods** (with a body) | Can**not** have default methods                     |
+
+
+## Question 17
+> JVM Optimization for Method Execution (3 Techniques)
+> - JIT (Just-In-Time) Compilation
+> - Method Inlining
+> - Escape Analysis
+
+- The **interpreter** runs code first to gather **profiling** data.
+- **Hot methods** are then **JIT**-compiled into native code, with **inlining** and **escape analysis** reducing call overhead and unnecessary allocations.
+- Optimized code can be recompiled later if runtime profiling changes.
+
+### JIT Compilation
+Instead of compiling all bytecode beforehand, the JVM **monitors frequently invoked methods** and compiles them into native CPU instructions **just-in-time**.
+
+Benefits:
+- Fast interpreter startup
+- Compile only the code paths proven to be important
+- Use runtime profiling info (branch probabilities, exact types) that ahead-of-time compilers can't know
+
+<details>
+<summary>HotSpot JVM Tiers</summary>
+
+- Interpreter: Quickly starts executing bytecode, collecting **profiling** data.
+- C1 (Client compiler): **Produces moderately** optimized native code quickly.
+- C2 (Server compiler): **Produces heavily** optimized code using detailed runtime profiling (branch predictions, type information, etc.).
+</details>
+
+### Method Inlining
+Inlining **replaces a method call** with the method’s body, **removing the call overhead** and exposing more opportunities for optimization.
+
+Benefits:
+- Eliminate stack frame creation for the call.
+- Let the JIT optimize across methods (constant folding, loop unrolling, etc.).
+
+<details>
+<summary>Example</summary>
+
+```java
+int add(int a, int b) { return a + b; }
+
+int sum(int x) { 
+    return add(x, 10); 
+}
+```
+After inlining `add`, `sum` becomes:
+```java
+int sum(int x) {
+    return x + 10;
+}
+```
+Now the compiler can constant-fold `+ 10` into optimized machine instructions.
+</details>
+
+### Escape Analysis
+Determines if an object created inside a method “escapes” to be **used elsewhere** (outside the method or thread).
+
+If an object **doesn’t** escape:
+- Faster allocation and automatic cleanup (no GC needed): Allocate on the stack instead of heap.
+- Scalar replacement: Break the object into primitive fields and keep them in registers instead of allocating at all.
+
+<details>
+<summary>Example</summary>
+
+```java
+class Point { int x, y; }
+
+void move() {
+    Point p = new Point(); // only used here
+    p.x = 5;
+    p.y = 10;
+    // ...
+}
+```
+If `p` never escapes `move()`, the JVM may:
+- Not allocate it on the heap.
+- Treat `x` and `y` as two local integers.
+</details>
+
+
+## Question 18
+> `record` & Immutability
+
+Java records, introduced as a preview in Java 14 and standardized in Java 16,
+are a special kind of class designed to **model immutable data carriers** in a **concise** and clear way.
+
+Immutability:
+- The **fields** are **final** by design.
+- There are **no setters**.
+- The canonical constructor ensures that values are **assigned only once** at construction.
+- This design enforces **shallow immutability** by default, i.e., immutable reference but mutable contents of the referenced object.
+
+<details>
+<summary>Example</summary>
+
+```java
+public RecordExample{
+    
+    public record Person(String name, List<String> hobbies) { }
+    
+    List<String> hobbyList = new ArrayList<>(List.of("Reading"));
+    Person p = new Person("Alice", hobbyList);
+    
+    // The `hobbies` reference in p is final — it will always point to the same List object
+    // But the contents of that List can still be changed (shallow immutability):
+    p.hobbies().add("Gaming");  // modifies internal state
+}
+```
+
+- **private final** fields: `name` and `hobbies`
+- a canonical constructor accepting `(String name, List<String> hobbies)`
+- accessor methods: `name()` and `hobbies()` (not `getName()`, note the no-get style)
+- **overridden** `equals()`, `hashCode()`, and `toString()` methods based on all components
+</details>
+
+## Question 19
+> Java 17 New Features:
+> - Pattern Matching for `switch`
+> - GC Changes
+
+### Pattern Matching for `switch`
+
+| **Before Java 17**                                                                       | **Java 17 (Pattern Matching for switch - Preview)**        |
+|------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| Can only switch on **primitive types**, **enums**, **Strings**, and **boxed primitives** | Can switch on **any `Object`** and match cases by **type** |
+| Cases must be **constant values** (e.g., `case 1`, `case "A"`)                           | Cases can be **type patterns** (e.g., `case String s`)     |
+| Type matching requires `if` & `instanceof` checks followed by explicit casting           | Cases can extract variables from the matched object        |
+
+<details>
+<summary>Example</summary>
+
+Before Java 17, no `switch` possible here.
+```java
+static String process(Object o) {
+    if (o instanceof Integer) {
+        int i = (Integer) o;
+        return "Integer: " + i;
+    } else if (o instanceof String) {
+        return "String: " + o;
+    } else if (o instanceof Double d) {  // pattern matching instanceof appeared only in Java 16
+        return "Double: " + d;
+    } else {
+        return "Unknown type";
+    }
+}
+```
+With Java 17 Pattern Matching for switch (preview)
+```java
+static String process(Object o) {
+    return switch (o) {
+        case Integer i -> "Integer: " + i;
+        case String s -> "String: " + s;
+        case Double d -> "Double: " + d;
+        default -> "Unknown type";
+    };
+}
+```
+</details>
+
+
+### GC Changes
+Java 17 ships with some updates and improvements to garbage collectors (GC), notably:
+- **Z Garbage Collector (ZGC) production-ready:** ZGC is a scalable low-latency GC designed to handle large heaps with minimal pause times. In Java 17, it is **no longer experimental** and fully supported.
+- **Improvements in G1 GC and other GCs:** Java 17 includes incremental improvements in G1, Shenandoah, and other GCs for better performance and footprint.
+- **Removal of the Experimental Parallel Full GC:** In Java 17, the experimental Parallel Full GC option was removed.
+
+[GC Types](#question-5)

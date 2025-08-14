@@ -458,3 +458,33 @@ public class StreamExample {
     }
 }
 ```
+
+
+## Question 16
+> Streams Under the Hood
+
+### Pipeline Structure and Laziness
+- A stream consists of:
+    - Source
+    - **Zero** or more intermediate operations
+    - Terminal operation
+- Streams are **lazy**: processing happens **only when a terminal operation is invoked**.
+
+### Internal Representation
+- Internally, a stream is represented as a chain of **`AbstractPipeline`** objects, each representing a stage.
+- Each stage has a **`Sink`**, which wraps the downstream stage to consume elements.
+
+### Element Traversal and Parallelism
+- The **source provides a `Spliterator`**, which:
+    - Traverses elements **one-by-one** in sequential streams.
+    - Can **split elements into chunks** for parallel streams, processed by threads in a **ForkJoinPool**.
+
+### Optimizations
+- **Operation fusion**: **Stateless** ops (e.g., `filter`, `map`) are chained in a **single pass** per element.
+- **Short-circuiting**: Operations like `findFirst()` or `anyMatch()` can stop traversal early.
+- **On-demand intermediate storage**: Only **stateful** operations (e.g., `sorted`, `distinct`) buffer elements.
+- **"Work-stealing" in ForkJoinPool**: Idle threads can "steal" chunks from busy threads to balance workload.
+- **Flags from `AbstractPipeline`**  
+  - `SIZED`: known element count → allows preallocation (e.g., `toArray`, `collect`)
+  - `SORTED`: source is sorted → enables sorting optimizations
+  - `ORDERED`: preserves encounter order as needed → unordered ops can be faster
