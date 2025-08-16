@@ -16,6 +16,11 @@
 - [The Class Loading Process](HW1.md#question-13)
 
 ## Spring
+- [Spring Boot Auto Configuration](HW9.md#question-17)
+- [Spring Profiles](HW9.md#question-18)
+- [Handling Circular Dependencies](HW9.md#question-19)
+- [CSRF in Spring Security](HW11.md#question-20)
+- [Aspect Oriented Programming](Spring-Boot-Annotations.md#6-aspect-oriented-programming)
 - [`BeanFactory` vs. `ApplicationContext`](HW9.md#question-13)
 - [Bean Scopes](HW9.md#question-14)
 

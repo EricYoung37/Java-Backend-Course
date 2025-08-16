@@ -15,14 +15,20 @@
 - Spring Boot annotations are a form of **metadata** that provide instructions to the **Spring container** on how to handle **classes** and **methods**.
 - They **simplify configuration** and reduce boilerplate code.
 
+### Classpath
+The classpath is essentially the set of locations (**folders** and **JAR files**) where the JVM will look for **compiled `.class` files** and **resources** when running a program.
 
+- **Compiled artifacts:** Java bytecode files (`.class`) generated from source code or libraries.
+- **Locations:** Directories containing compiled classes (e.g., `target/classes`) or archive files (e.g., `.jar` files) packaged for distribution.
+- **Utilization:** The JVM, through its **class-loading** mechanism, locates and loads these classes into memory for execution.
+- `.jar` file = `.class` files + resources (e.g., `.properties`)
 
 ## 1. Core Configuration
 
 ### ◆ `@SpringBootApplication`
 Combination of `@SpringBootConfiguration`, `@EnableAutoConfiguration` and `ComponentScan`.
 - `@SpringBootConfiguration`: annotated **class** provides Spring Boot **application** `@Configuration` (app-level config).
-- `@EnableAutoConfiguration`: enables autoconfiguration of the Spring Application Context to **provide possibly needed beans** based on the classpath (how to use sub-configs).
+- `@EnableAutoConfiguration`: enables auto-configuration of the Spring Application Context to **provide possibly needed beans** based on the classpath (how to use sub-configs).
 - `@ComponentScan`: configures component scanning directives for use with `@Configuration` classes (what sub-configs to use).
 
 ```java

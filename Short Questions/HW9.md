@@ -375,3 +375,187 @@ See [DI-demo](../Projects/DI-demo).
 > Explain the builder pattern with code.
 
 See [HW2.md Question 9](HW2.md#builder).
+
+
+## Question 17
+> Spring Boot Auto Configuration
+
+### 1.  Enabling Auto-Configuration
+Upon app startup, `@EnableAutoConfiguration` triggers `@Import(AutoConfigurationImportSelector.class)`.
+- `@SpringBootApplication` is meta-annotated with `@EnableAutoConfiguration`.
+
+### 2. Finding Auto-Configuration Classes
+`AutoConfigurationImportSelector` uses `SpringFactoriesLoader` to collect candidate auto-configuration classes from `META-INF` files.
+- `META-INF` files live inside the JARs of starters and other dependencies.
+- The order of processing is influenced by:
+  - `@AutoConfigureBefore`
+  - `@AutoConfigureAfter`
+  - `@AutoConfigureOrder`
+
+### 3. Applying Conditional Logic & Bean Registration
+Each candidate class is evaluated against its `@Conditional...` annotations.
+- If all conditions pass, the class is processed and its `@Beans` are registered in the `ApplicationContext`.
+- If any condition fails, the class is skipped entirely.
+
+### 4. Customization & Overrides
+- User-defined beans take precedence over auto-configured beans (`@ConditionalOnMissingBean`).
+- Auto-configuration can be excluded explicitly via:
+  - `@SpringBootApplication(exclude = {SomeAutoConfiguration.class})`
+  - `application.properties` (`spring.autoconfigure.exclude=...`)
+
+
+## Question 18
+> Spring Profiles
+
+Spring Profiles are a mechanism that defines named, logical groupings of configuration settings or beans,
+allowing an application to **switch between different environment-specific configurations** (e.g., development, testing, production) **without changing the code**.
+
+### Activate Profiles
+Multiple profiles can be active at once by listing them separated by commas:
+```properties
+spring.profiles.active=dev,debug
+```
+Profile-specific property files such as `application-dev.properties` or `application-prod.properties` are **optional**.
+
+Spring Boot automatically loads the correct file based on the active profile, **overriding values** in `application.properties`.
+
+### Conditional Bean Registration
+Use the `@Profile` to register beans conditionally.
+
+For configuration classes:
+```java
+@Configuration
+@Profile("dev")
+public class DevConfig {
+  // Beans for development environment
+}
+```
+For individual beans:
+```java
+@Configuration
+public class MessageServiceConfig {
+
+    @Bean
+    @Profile("dev")
+    public MessageService devMessageService() {
+        // dev code
+    }
+
+    @Bean
+    @Profile("prod")
+    public MessageService prodMessageService() {
+        // prod code
+    }
+}
+```
+
+
+## Question 19
+> Handling Circular Dependencies
+
+Circular dependencies occur when two or more beans **depend on each other** directly or indirectly,
+causing a cycle that the container cannot resolve during bean creation.
+
+### Redesign
+- Circular dependencies usually signal tight coupling.
+- **Extract shared logic** into a separate service or component that both beans can depend on.
+
+### Use `@Lazy`
+Using `@Lazy` on one of the beans breaks the cycle by **deferring** the bean injection until actually needed.
+
+**Example**
+```java
+@Component
+public class ServiceA {
+    private final ServiceB serviceB;
+    
+    @Autowired
+    public ServiceA(@Lazy ServiceB serviceB) {
+        this.serviceB = serviceB;
+    }
+}
+```
+```java
+@Component
+public class ServiceB {
+    private final ServiceA serviceA;
+    
+    @Autowired
+    public ServiceB(ServiceA serviceA) {
+        this.serviceA = serviceA;
+    }
+}
+```
+
+### Use Setter/Field Injection
+- Constructor injection requires all dependencies to be available at the time of instantiation, which makes circular references impossible to satisfy.
+- Setter/field injection allows Spring to create the bean first and **inject** dependencies **afterward**, allowing circular dependencies to be resolved.
+
+**Example**
+```java
+// ServiceA can be instantiated and have ServiceB injected afterward
+@Component
+public class ServiceA {
+    private ServiceB serviceB;
+
+    @Autowired
+    public void setServiceB(ServiceB serviceB) {
+        this.serviceB = serviceB; // setter injection
+    }
+}
+```
+```java
+@Component
+public class ServiceB {
+    private final ServiceA serviceA;
+    
+    // constructor injection
+    public ServiceB(ServiceA serviceA) {
+        this.serviceA = serviceA;
+    }
+}
+```
+
+### Use `ObjectFactory` or `Provider`
+- Inject `ObjectFactory<ServiceB>` or `Provider<ServiceB>` instead of `ServiceB` directly.
+- This **delays** the actual lookup of the bean until needed.
+
+**`ObjectFactory` Example**
+```java
+@Component
+public class ServiceA {
+    private final ObjectFactory<ServiceB> serviceBFactory;
+
+    @Autowired
+    public ServiceA(ObjectFactory<ServiceB> serviceBFactory) {
+        this.serviceBFactory = serviceBFactory;
+    }
+
+    public void someMethod() {
+        ServiceB serviceB = serviceBFactory.getObject(); // retrieve ServiceB lazily
+        // use serviceB here
+    }
+}
+```
+
+**`Provider` Example**
+```java
+@Component
+public class ServiceA {
+    private final Provider<ServiceB> serviceBProvider;
+
+    @Autowired
+    public ServiceA(Provider<ServiceB> serviceBProvider) {
+        this.serviceBProvider = serviceBProvider;
+    }
+
+    public void someMethod() {
+        ServiceB serviceB = serviceBProvider.get(); // retrieve ServiceB lazily
+        // use serviceB here
+    }
+}
+```
+
+**Note**
+- `@PostConstruct` does **not remove** the circular reference
+- It only allows methods to execute safely after all beans are injected, but the methods **still run within the cycle**.
