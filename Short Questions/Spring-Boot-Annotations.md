@@ -886,19 +886,306 @@ The exception will **bubble up** to `@ControllerAdvice`.
 
 ## 6. Aspect Oriented Programming
 
+Spring AOP is a Spring Framework feature that **modularizes cross-cutting concerns** like logging, security, and transactions **into reusable aspects**, keeping them separate from core business logic.
+
+### Spring AOP Under the Hood
+Consider this example:
+```
+com.small.backend.orderservice.controller.OrderController // "Injects" OrderService
+com.small.backend.orderservice.service.OrderService // Interface
+com.small.backend.orderservice.service.impl.OrderServiceImpl // Implementation
+```
+
+The flow looks like:
+```
+Controller
+   ↓
+Proxy(OrderService)
+   ├─ @Before advice runs (before target call)
+   ├─ @Around advice (before part)
+   ↓
+   Target(OrderService.method())
+   ↑
+   ├─ @AfterReturning advice (if no exception)
+   ├─ @AfterThrowing advice (if exception)
+   ├─ @Around advice (after part)
+   └─ @After advice (always, finally block style)
+   ↓
+Return to caller
+```
+
+- During application context initialization, Spring creates the actual bean instance (e.g., `OrderServiceImpl`)
+and then **wraps** that it with a **proxy** —either a JDK dynamic proxy that implements the bean’s interfaces,
+or a CGLIB proxy that subclasses the bean.
+- The **proxy object** is what gets injected into other beans (e.g., controllers), not the raw bean itself.
+- The proxy **intercepts** method calls, **delegates** them to the real bean, and **applies** any matching AOP advice.
+- The **timing of advice execution** is determined by annotations like `@Before`, `@After`, etc.
+
 ### ◆ `@Aspect`
+A modular unit of **a cross-cutting concern**, typically implemented as **a class** annotated with `@Aspect`.
+
+```java
+package com.small.backend.orderservice.aop;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+    // Matches join points where the **proxy object**
+    // itself is an instanceof OrderService.
+    // (true for JDK dynamic proxy, since proxy implements the interface)
+    @Pointcut("this(com.small.backend.orderservice.service.OrderService)")
+    public void proxyImplementsOrderService() {}
+
+    @After("proxyImplementsOrderService()")
+    public void logAfterThis() {
+        System.out.println("[this] Advice: Proxy implements OrderService interface");
+    }
+
+    // Matches join points where the **actual target bean** 
+    // is an instanceof OrderService.
+    // This works because OrderServiceImpl implements OrderService,
+    // so (targetObject instanceof OrderService) == true.
+    @Pointcut("target(com.small.backend.orderservice.service.OrderService)")
+    public void targetIsOrderService() {}
+
+    @After("targetIsOrderService()")
+    public void logAfterTargetInterface() {
+        System.out.println("[target] Advice: Target object is an OrderService");
+    }
+
+    // Matches join points where the **actual target bean**
+    // is an instanceof OrderServiceImpl.
+    // This also works because the real bean is exactly of type OrderServiceImpl,
+    // so (targetObject instanceof OrderServiceImpl) == true.
+    @Pointcut("target(com.small.backend.orderservice.service.impl.OrderServiceImpl)")
+    public void targetIsOrderServiceImpl() {}
+
+    @After("targetIsOrderServiceImpl()")
+    public void logAfterTarget() {
+        System.out.println("[target] Advice: Real bean is OrderServiceImpl");
+    }
+}
+```
+
+### ◆ Join Point
+An **implicit** point in the execution of the program, e.g., method execution, constructor call, exception handling.
 
 ### ◆ `@Pointcut`
+A **predicate** that selects specific join points where an advice should be applied.
 
-### ◆ `@Before`
+#### ◆ `execution`
+Matches **method execution** join points based on method signature details (return type, method name, parameters, class, package).
 
-### ◆ `@After`
+```
+execution(                    // designator
+    [modifier-pattern]        // optional, public, *
+    [return-type-pattern]     // void, *
+    [package-pattern]         // may internally include .. to match subpackages
+    (. | ..)                  // . = direct, .. = recursive
+    [class-pattern]           // *
+    .                         // separator
+    [method-pattern]          // *
+    ([param-pattern])         // .. (any number and type of parameters)
+)
+```
 
-### ◆ `@AfterReturning`
+```java
+// void methods in classes whose names start with 'Order' in com.small package or its subpackages
+@Pointcut("execution(void com.small..Order*.*(..))")
+public void allOrderMethodsReturningVoid() {}
+```
 
-### ◆ `@AfterThrowing`
+#### ◆ `within`
+Matches **method executions** join points within certain types (**classes** or **packages**).
 
-### ◆ `@Around`
+**Package/class matching**
+```
+within(
+    [package-pattern]         // may internally include .. to match subpackages
+    (. | ..)                  // . = direct, .. = recursive
+    [class-pattern]           // *
+)
+```
+
+```java
+// all methods in all classes under com.small.backend.orderservice and its subpackages
+@Pointcut("within(com.small.backend.orderservice..*)")
+public void allMethodsUnderOrderService() {}
+```
+
+**Annotation-type matching**
+```
+within(
+    @[annotation-type]        // matches classes annotated with this annotation
+    [class-pattern]           // optional, * = any class with the annotation
+)
+```
+
+```java
+// all methods in any class annotated with @Repository
+@Pointcut("within(@org.springframework.stereotype.Repository *)")
+public void repositoryClasses() {}
+```
+
+#### ◆ `this`
+Matches join points where the **AOP proxy object** is an instance of a given type.
+
+#### ◆ `target`
+Matches join points where the **actual underlying bean** is an instance of a given type.
+
+#### ◆ `args`
+Matches join points based on the **runtime** types of method arguments.
+
+```java
+@Pointcut("args(Number, ..)")
+public void methodsWithNumberFirstArg() {}
+
+/* // Matches both calls
+public void process(Number n) { ... }
+
+process(new Integer(5));  // runtime type = Integer
+process(new Double(3.14)); // runtime type = Double
+*/
+```
+
+#### Combining Pointcut Expressions
+
+```java
+/**
+ * Matches:
+ * 1. All methods in OrderController
+ * 2. All methods in OrderServiceImpl
+ */
+@Pointcut(
+    "execution(* com.small.backend.orderservice.controller.OrderController.*(..)) || " +
+    "execution(* com.small.backend.orderservice.service.impl.OrderServiceImpl.*(..))"
+)
+public void controllerAndServiceMethods() {}
+```
+
+
+### ◆ Advice
+**Action** taken by an aspect at a particular join point.
+
+An advice can either **reference a `@Pointcut` method** or **use the expressions directly** (delegator) in its `value` or `pointcut` attribute.
+
+#### ◆ `@Before`
+Runs before the method execution.
+
+```java
+@Pointcut(
+        "execution(* com.small.backend.orderservice.controller.OrderController.*(..)) || " +
+        "execution(* com.small.backend.orderservice.service.impl.OrderServiceImpl.*(..))"
+)
+public void controllerAndServiceMethods() {}
+
+@Before("controllerAndServiceMethods()")
+public void logBefore() {
+    System.out.println("[Before] Method is about to execute");
+}
+
+@Before("execution(* com.small.backend.orderservice.controller.OrderController.*(..))")
+// Equivalent to:
+//@Before(value = "execution(* com.small.backend.orderservice.controller.OrderController.*(..))")
+//@Before(pointcut = "execution(* com.small.backend.orderservice.controller.OrderController.*(..))")
+public void logBeforeController() {
+    System.out.println("[Before] Controller Method is about to execute");
+}
+```
+
+#### ◆ `@After`
+Runs after the method execution (**regardless of outcome**).
+
+```java
+@After("controllerAndServiceMethods()")
+public void logAfter() {
+    System.out.println("[After] Method has executed (finally)");
+}
+```
+
+#### ◆ `@AfterReturning`
+Runs after a method returns successfully.
+
+```java
+@AfterReturning(pointcut = "controllerAndServiceMethods()", returning = "result")
+public void logAfterReturning(Object result) {
+    System.out.println("[AfterReturning] Method returned: " + result);
+}
+
+@AfterReturning(
+    value = "execution(* com.small.backend.orderservice.controller.OrderController.*(..))",
+    returning = "result"
+)
+public void logAfterControllerReturning(Object result) {
+    System.out.println("[AfterReturning] Controller method returned: " + result);
+}
+```
+
+The `returning` **attribute** specifies the name of the parameter in your **advice** method that will **receive** the **return value** of the **target** method.
+
+#### ◆ `@AfterThrowing`
+Runs if a method throws an exception.
+
+```java
+@AfterThrowing(pointcut = "controllerAndServiceMethods()", throwing = "ex")
+public void logAfterThrowing(Throwable ex) {
+    System.out.println("[AfterThrowing] Method threw exception: " + ex.getMessage());
+}
+```
+
+The `throwing` **attribute** specifies the name of the parameter in your **advice** method that will **receive** the **exception** thrown by the **target** method.
+
+#### ◆ `@Around`
+Wraps the method execution (can control whether to proceed).
+
+```java
+@Around("controllerAndServiceMethods()")
+public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    System.out.println("[Around-Before] Before method: " + joinPoint.getSignature());
+    // a signature object represents the method being intercepted
+    // might print
+    // void com.small.backend.orderservice.service.impl.OrderServiceImpl.createOrder(String)
+    try {
+        Object result = joinPoint.proceed();  // target method executes here
+        System.out.println("[Around-AfterReturning] Method returned: " + result);
+        return result;
+    } catch (Throwable ex) {
+        System.out.println("[Around-AfterThrowing] Method threw exception: " + ex.getMessage());
+        throw ex;
+    } finally {
+        System.out.println("[Around-Finally] After method (finally block)");
+    }
+}
+```
+
+### ◆ `@Order`
+
+`@Order` defines the priority or precedence of an aspect when multiple aspects apply to the same join point.
+
+```java
+@Aspect
+@Component
+@Order(1)
+public class FirstAspect {
+    @Before("somePointcut()")
+    public void before() {
+        System.out.println("1st before advice");
+    }
+}
+```
+
+```java
+@Aspect
+@Component
+@Order(2)
+public class SecondAspect {
+    @Before("somePointcut()")
+    public void before() {
+        System.out.println("2nd before advice");
+    }
+}
+```
 
 ------------
 
