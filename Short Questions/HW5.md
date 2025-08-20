@@ -604,3 +604,16 @@ Disallow: /deny
 | Update a blog post            | `PUT`           | `/posts/{postId}`         | JSON body: `title`, `content`, `tags`, `published`                           |
 | Delete a blog post            | `DELETE`        | `/posts/{postId}`         | —                                                                            |
 | Publish/unpublish a blog post | `PATCH`         | `/posts/{postId}/publish` | JSON body: `published` (true/false)                                          |
+
+
+## Question 3
+> HTTP Status Codes
+
+| Category | Code Range | Meaning           | Description                                             | Examples                                                                                                                |
+|----------|------------|-------------------|---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| **1xx**  | 100–199    | **Informational** | Request received, continuing process                    | `100 Continue`                                                                                                          |
+| **2xx**  | 200–299    | **Success**       | Request successfully received, understood, and accepted | `200 OK`, `201 Created`                                                                                                 |
+| **3xx**  | 300–399    | **Redirection**   | Further action needed to complete the request           | `301 Moved Permanently`, `302 Found`                                                                                    |
+| **4xx**  | 400–499    | **Client Error**  | Request contains bad syntax or cannot be fulfilled      | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`                                                 |
+| **5xx**  | 500–599    | **Server Error**  | Server failed to fulfill a valid request                | `500 Internal Server Error`, `501 Not Implemented`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout` |
+

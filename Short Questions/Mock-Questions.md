@@ -27,12 +27,11 @@
 ## Kubernetes
 - [ClusterIP vs. NodePort vs. LoadBalancer](HW15.md#question-3)
 - [Ingress Controller](HW15.md#question-4)
+- [Auto-scaling](HW15.md#question-5)
+- [Handling Node Failures](HW15.md#question-6)
+- [Node Failure Alert Implementations](HW15.md#question-7)
+- [Internal DNS](HW15.md#question-8)
 
-## Procedure
-
-> Sprint Routine
-
-- 1 to 4 weeks (commonly 2 weeks)
-- Sprint planning: select tasks and user stories from the backlog (1st day)
-- Sprint Review: demo completed work (last day)
-- Sprint Retrospective: reflection — discuss what went well and what can improve for the next Sprint (last day)
+## Others
+- [HTTP Status Code](HW5.md#question-3)
+- [Sprint Routine](HW12.md#question-3)
