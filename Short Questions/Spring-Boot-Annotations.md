@@ -802,6 +802,53 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 ## 5. Exception Handling
 
+### ◆ `@ResponseStatus`
+
+Marks a **controller method**, **exception handler method**, or **exception class** with the HTTP status to return, specified via `code()` (alias `value()`) and optionally `reason()`.
+
+#### ◆ On Controller Methods
+```java
+@PostMapping
+@ResponseStatus(HttpStatus.CREATED) // 201
+public PostDto createPost(@RequestBody PostDto postDto) {
+    return postService.createPost(postDto); // body
+}
+```
+
+#### ◆ On `@ExceptionHandler` Methods
+```java
+@ExceptionHandler(ResourceNotFoundException.class)
+@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+public ErrorDetails handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
+    return new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false)); // body
+}
+```
+
+#### ◆ On Exception Classes
+```java
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Resource Not Found")
+// reason will be seen by user, e.g., in Postman
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message); // message stored in JVM / output in IDE logs, not seen by user
+    }
+}
+```
+#### ◆ Less Control than `ResponseEntity`
+When a method returns a `ResponseEntity`:
+- **HTTP status:** The status in `ResponseEntity` always **takes precedence** over `@ResponseStatus`.
+- **Reason phrase:** `@ResponseStatus(reason = "...")` is also **ignored**. Spring does not use it if `ResponseEntity` specifies the status.
+- **Headers:** Only `ResponseEntity` can carry custom headers; `@ResponseStatus` **cannot**.
+
+```java
+@PostMapping()
+@ResponseStatus(value = HttpStatus.OK, reason = "This is ignored")
+public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+    PostDto postResponse = postService.createPost(postDto);
+    return new ResponseEntity<>(postResponse, HttpStatus.CREATED); // this is used
+}
+```
+
 ### ◆ `@ControllerAdvice`
 
 Declares `@ExceptionHandler`, `@InitBinder`, or `@ModelAttribute` methods to be **shared across** multiple `@Controller` classes
@@ -812,76 +859,69 @@ Declares `@ExceptionHandler`, `@InitBinder`, or `@ModelAttribute` methods to be 
 
 Annotation for handling exceptions in specific handler **classes** and/or handler **methods**.
 
+#### ◆ Inside a Controller
+- **Only** handles exceptions thrown **within that specific controller**.
+- If the exception occurs **in another controller, it won’t be caught**.
+
 ```java
-package com.chuwa.redbook.exception;  // pay attention to the folder (package)
+// This example uses both ResponseEntity and @ResponseStatus
+@RestController
+@RequestMapping("/posts")
+public class PostController {
 
-// imports
-
-@ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
+        return ResponseEntity.ok(postService.getPostById(id));
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception,
-                                                                        WebRequest webRequest) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
-                webRequest.getDescription(false));
-
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND) // 404
+    public ErrorDetails handleNotFound(ResourceNotFoundException ex, WebRequest request) {
+        return new ErrorDetails(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
     }
-    
-    // ...
 }
 ```
 
-
-### ◆ `@ResponseStatus`
-
-Marks a **method** or **exception class** with the status `code()` and `reason()` that should be returned.
-
+The exception in the `PostService.getPostById` method is **not caught internally** and **propagates** to the `PostController.getPostById` method and gets intercepted.
 ```java
-package com.chuwa.redbook.exception;  // pay attention to the folder (package)
-
-// @ResponseStatus can be removed if @ControllerService is used instead.
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends RuntimeException {
-    private String resourceName;
-    private String fieldName;
-    private long fieldValue;
-
-    public ResourceNotFoundException(String resourceName, String fieldName, long fieldValue) {
-        
-        // note super() is called
-        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fieldValue));
-        
-        this.resourceName = resourceName;
-        this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
-    }
-    
-    // getters & setters
-}
-```
-
-```java
-// package, imports
-
-import com.chuwa.redbook.exception.ResourceNotFoundException;
-
 @Service
 public class PostServiceImpl implements PostService {
+    // Beans' injection
     @Override
     public PostDto getPostById(long id) {
-
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-
+        // exception bubbles up to controller
         return modelMapper.map(post, PostDto.class);
     }
 }
 ```
 
-※ To use `GlobalExceptionHandler` instead, remove `@ResponseStatus`.
-The exception will **bubble up** to `@ControllerAdvice`.
+#### ◆ With `@ControllerAdvice`
+- Makes the handler **global** — it **intercepts** exceptions from **any controller** in the application.
 
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleResourceNotFound(ResourceNotFoundException ex,
+                                                               WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
+                                                     request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+}
+```
+
+#### Interaction with [Spring AOP](#6-aspect-oriented-programming)
+1. `@ExceptionHandler` and `@ControllerAdvice` can handle exceptions that **propagate** from the service layer to the controller layer.
+For **exceptions thrown in utility methods or internal logic** within the service layer that are **caught and not re-thrown**, **Spring AOP** provides a better approach for centralized handling (e.g., logging, wrapping, or metrics).
+2. When using Spring AOP to intercept service methods called by controllers, exceptions will **only reach the controller if the advice re-throws** them.
+If the advice **handles or swallows** the exceptions, they **will not propagate and will not trigger** `@ExceptionHandler` or `@ControllerAdvice`.
 
 
 ## 6. Aspect Oriented Programming
