@@ -23,6 +23,7 @@
 - [Aspect Oriented Programming](Spring-Boot-Annotations.md#6-aspect-oriented-programming)
 - [`BeanFactory` vs. `ApplicationContext`](HW9.md#question-13)
 - [Bean Scopes](HW9.md#question-14)
+- [Circuit Breaker](HW13.md#question-4)
 
 ## Kubernetes
 - [ClusterIP vs. NodePort vs. LoadBalancer](HW15.md#question-3)
@@ -35,3 +36,8 @@
 ## Others
 - [HTTP Status Code](HW5.md#question-3)
 - [Sprint Routine](HW12.md#question-3)
+- [CI/CD Pipeline](HW12.md#question-4)
+- [Sotware Development Environments](HW12.md#question-5)
+- [Application Tiers](HW13.md#question-9)
+- [SQL/OLTP vs. NoSQL vs. OLAP](HW16.md#question-30)
+- [REST API vs. GraphQL](HW6.md#question-7)

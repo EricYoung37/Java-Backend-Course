@@ -97,13 +97,15 @@ spring:
 
 
 ## Question 7
-> Naming: REST APIs vs. GraphQL
+> REST APIs vs. GraphQL
 
-| Aspect          | REST                                             | GraphQL                                                   |
-|-----------------|--------------------------------------------------|-----------------------------------------------------------|
-| Endpoint Naming | Resource-based (e.g., `/users`, `courses`, etc.) | Single endpoint (e.g., `/graphql`)                        |
-| Action Naming   | HTTP verbs                                       | Explicit Operations (e.g., `getUser`, `createUser`, etc.) |
-| Philosophy      | protocol-driven (compliance with HTTP semantics) | query-driven (client-defined API behavior in the query)   |
+| Feature                    | REST API                                                                                                               | GraphQL                                                                                                                                                                                                                                                                                                       |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Request URL (endpoint)** | Typically multiple endpoints, each representing a resource. Example: `/users`, `/orders/123`.                          | Usually a single endpoint (e.g., `/graphql`) that handles all queries and mutations.                                                                                                                                                                                                                          |
+| **Operation Types**        | Uses standard HTTP methods: `GET` (read), `POST` (create), `PUT/PATCH` (update), `DELETE` (delete).                    | GraphQL queries (read) and mutations (write) are typically sent to the server over HTTP. Most commonly, a `POST` request is used, with the query or mutation included in the request body as JSON. For read-only queries, some servers also allow sending them via `GET` requests using URL query parameters. |
+| **Payload (request body)** | `GET` usually has no body; parameters in URL or query string. `POST/PUT/PATCH` include JSON or form data in body.      | Request body is a JSON object containing a `query` string (GraphQL query or mutation), and optionally `variables`. Example: `{ "query": "...", "variables": { ... } }`                                                                                                                                        |
+| **Returned Things**        | JSON response representing the resource. HTTP status codes indicate success/failure (e.g., `200 OK`, `404 Not Found`). | JSON response always wraps the requested data under a `data` field; errors under an `errors` field. HTTP status codes are usually `200 OK` even if part of the query fails (errors reported in `errors` field).                                                                                               |
+| **Flexibility**            | Fixed response structure per endpoint. Clients may over-fetch or under-fetch data.                                     | Clients specify exactly what fields they want; no over-fetching. Multiple resources can be queried in a single request.                                                                                                                                                                                       |
 
 ### Example
 
