@@ -16,6 +16,7 @@
 - [The Class Loading Process](HW1.md#question-13)
 
 ## Spring
+- [Dependency Injection](Spring-Boot-Annotations.md#dependency-injection-di)
 - [Spring Boot Auto Configuration](HW9.md#question-17)
 - [Spring Profiles](HW9.md#question-18)
 - [Handling Circular Dependencies](HW9.md#question-19)
@@ -41,3 +42,5 @@
 - [Application Tiers](HW13.md#question-9)
 - [SQL/OLTP vs. NoSQL vs. OLAP](HW16.md#question-30)
 - [REST API vs. GraphQL](HW6.md#question-7)
+- [Kafka Acknowledgement Levels](HW14.md#acknowledgement-level)
+- [Kafka Delivery Guarantees](HW14.md#question-9)

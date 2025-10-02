@@ -5,9 +5,12 @@
 ### Inversion of Control (IoC)
 - Inversion of Control (IoC) in Spring is a design principle where the control of **object creation and lifecycle management is transferred** from the programmer to the Spring framework.
 
+### Dependency Injection (DI)
+- Dependency Injection (DI) in Spring Boot is a design pattern where **Spring automatically provides a class with the objects it depends on**, rather than the class creating them itself.
+
 ### Spring Container
 - The Spring container, a core component of the Spring Framework, manages the lifecycle and dependencies of **application objects**, known as **beans**.
-- It uses **dependency injection** (DI) to assemble these components, promoting **loose coupling** and modularity.
+- It uses **dependency injection** to assemble these components, promoting **loose coupling** and modularity.
 - The container reads configuration **metadata**, which can be in XML, Java annotations, or Java code, to understand how to instantiate, configure, and wire beans together.
 - Spring **Application Context** represents the Spring IoC container.
 
