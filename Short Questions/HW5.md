@@ -1,6 +1,13 @@
 # Homework 5 — REST API
 **Author: M. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [HTTP Status Codes](#question-3)
+
+</details>
+
 ## Question 1
 > Practice HTTP methods in Postman.
 > * 5 GETs with different response types

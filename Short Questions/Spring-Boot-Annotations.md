@@ -1,6 +1,17 @@
 # Spring Boot Annotations
 **Author: M.Y. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [Basic Concepts](#basic-concepts)
+2. [Different Types of Bean Injection](#constructor-injection)
+3. [Persistence Layer](#4-persistence-layer-jpahibernate)
+4. [Exception Handling](#5-exception-handling)
+5. [Aspect-Oriented Programming (AOP)](#6-aspect-oriented-programming)
+
+</details>
+
 ## Basic Concepts
 ### Inversion of Control (IoC)
 - Inversion of Control (IoC) in Spring is a design principle where the control of **object creation and lifecycle management is transferred** from the programmer to the Spring framework.
