@@ -1,6 +1,31 @@
 # Homework 4 — Multi-threading
 **Author: M. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [Thread-safe Singleton Class](#question-2)
+2. [Thread Creation—4 ways](#question-3)
+3. [`Runnable` vs. `Callable`](#question-4)
+4. [`start()` vs. `run()`](#question-5)
+5. [`Thread` vs. `Runnable` for Thread Creation](#question-6)
+6. [Thread States](#question-7)
+7. [Deadlock](#question-8)
+8. [Communication between Threads](#question-9)
+9. [Object Lock vs. Class Lock](#question-10)
+10. [`join()` in `java.lang.Thread` & Fork/Join Framework](#question-11)
+11. [`yield()`](#question-12)
+12. [Thread Pool](#question-13)
+13. [`shutdown()` vs. `shutdownNow()`](#question-17)
+14. [Atomic Class](#question-18)
+15. [Concurrent Collections](#question-19)
+16. [Reentrant Lock vs. R/W Lock vs. Stamped Lock](#question-20)
+17. [`Future` vs. `CompletableFuture`](#question-21)
+18. [Thread Starvation](#question-26)
+19. [Reactive Stream](#question-27)
+
+</details>
+
 ## Question 2
 > Thread-safe singleton class
 
@@ -242,7 +267,7 @@ public class Examples {
 ```
 
 ## Question 6
-> Which is the better way to create a thread: `Thread` or `Runnable`?
+> `Thread` vs. `Runnable` for Thread Creation
 
 The `Runnable` interface is generally the preferred approach due to its flexibility, reusability, and compatibility with modern concurrency utilities like `ExecutorService`.
 

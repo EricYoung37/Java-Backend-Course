@@ -1,6 +1,15 @@
 # Homework 9 — Spring Beans
 **Author: M. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [Spring vs. Spring Boot](#question-2)
+2. [`BeanFactory` vs. `ApplicationContext`](#question-13)
+3. [Bean Scopes & Lifecycles](#question-14)
+
+</details>
+
 ## Question 1
 > Spring Boot Annotations Review
 

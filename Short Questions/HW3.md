@@ -268,19 +268,8 @@ class Example {
 ### 4. `Optional` Class
 Introduced to avoid `null` checks and `NullPointerException` (NPE).
 
-```java
-import java.util.Optional;
-
-public class Main {
-    public static void main(String[] args) {
-        Optional<String> name = Optional.of("Alice");
-
-        // Check and get value
-        name.ifPresent(n -> System.out.println("Hello, " + n));
-        System.out.println(name.orElse("Unknown"));
-    }
-}
-```
+- [`Optional` class](HW2.md#question-7)
+- [How to Prevent NPE](#question-5)
 
 
 ### 5. Stream API
