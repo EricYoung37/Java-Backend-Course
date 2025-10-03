@@ -1,12 +1,47 @@
 # Homework 1 — Java OOP
 **Author: M. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [Fundamental Concepts of Java OOP - A PIE](#question-1)
+2. [Wrapper Classes](#question-2)
+3. [`HashMap` vs. `HashTable`](#question-3)
+4. [String Pool & String Immunity](#question-4)
+5. [GC Types](#question-5)
+6. [Access Modifiers](#question-6)
+7. [`final`](#question-7)
+8. [`static`](#question-8)
+9. [Polymorphism: Overloading vs. Overriding](#question-9)
+10. [Method Signature](#question-10)
+11. [`super` vs. `this`](#question-11)
+12. [`equals()` and `hashCode()`](#question-12)
+13. [Java Load Sequence](#question-13)
+14. [Encapsulation](#question-15)
+15. [Abstraction: Interface vs. Abstract Class](#question-16)
+16. [Java Optimization for Method Execution](#question-17)
+17. [`record` & Immutability](#question-18)
+18. [Java 17 New Features](#question-19)
+
+</details>
+
 ## Question 1
 > Fundamental concepts of Java OOP - A PIE
-> * [Abstraction—Question 16](#question-16)
-> * Polymorphism
-> * Inheritance
-> * Encapsulation (access modifiers, getter/setter)
+> * **[Abstraction](#question-16):**
+> 
+>   Hides complex implementation details and exposes only the essential features of an object.
+>
+> * **[Polymorphism](#question-9):**
+> 
+>   Allows objects of different types to be treated as objects of a common supertype, typically via method overriding or overloading.
+>
+> * **Inheritance:**
+> 
+>   Enables a class to acquire properties and behaviors from another class, promoting code reuse.
+>
+> * **[Encapsulation](#question-15):**
+> 
+>   Restricts direct access to an object’s internal state and allows controlled interaction through methods.
 
 ```java
 // Encapsulation
@@ -99,10 +134,12 @@ public class Main {
 
 
 ## Question 2
-> Wrapper classes
+> Wrapper Classes
 
 In Java, wrapper classes are object representations of the primitive data types.
 Each wrapper class wraps a **primitive value inside an object**.
+
+Wrapper classes **cannot** be extended because they are declared as `final`.
 
 | Primitive Type | Wrapper Class |
 |----------------|---------------|
@@ -146,7 +183,7 @@ Wrappers allow you to represent "no value" (**null**) — useful in databases, A
 
 
 ## Question 4
-> String pool and string immunity
+> String Pool & String Immunity
 
 ### What is String Pool in Java?
 The **String Pool** (also called the **String Intern Pool**) is a special memory area inside the **Java heap** that stores **unique String literals**.
@@ -190,14 +227,18 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 **Types of GC:**
 
-| GC Type                            | Description                                                                       |
-|------------------------------------|-----------------------------------------------------------------------------------|
-| **Serial GC**                      | Single-threaded, simple, good for small apps                                      |
-| **Parallel GC**                    | Multi-threaded for both minor and major collections, good throughput              |
-| **CMS (Concurrent Mark Sweep) GC** | Collects in phases with minimal pause time, deprecated as of Java 9               |
-| **G1 GC (Garbage First)**          | Prioritizes low-pause-time and is good for large heaps; default since Java 9      |
-| **ZGC (Z Garbage Collector)**      | Scalable, low-latency GC; supports heaps from MBs to TBs with pauses <10ms        |
-| **Shenandoah GC**                  | Also low-pause-time GC, developed by Red Hat; pauses are independent of heap size |
+| Garbage Collector                     | Pause Time            | Throughput | Heap Size Suitability    | Notes                                                           |
+|---------------------------------------|-----------------------|------------|--------------------------|-----------------------------------------------------------------|
+| **Serial GC** (`UseSerialGC`)         | High (stop-the-world) | Moderate   | Small heaps              | Single-threaded, simple, good for single-core or small apps     |
+| **Parallel GC** (`UseParallelGC`)     | Moderate              | High       | Medium                   | Multi-threaded, focuses on throughput                           |
+| **CMS GC** (`UseConcMarkSweepGC`)     | Low                   | Moderate   | Medium                   | Concurrent collection, aims for low pause times                 |
+| **G1 GC** (`UseG1GC`)                 | Low to moderate       | High       | Large                    | Region-based, balances pause time and throughput                |
+| **ZGC** (`UseZGC`)                    | Very low              | High       | Very large (multi-GB/TB) | Concurrent, scalable, low-latency                               |
+| **Shenandoah GC** (`UseShenandoahGC`) | Very low              | High       | Large                    | Similar to ZGC, keeps pause times short regardless of heap size |
+
+- **Pause Time:** The duration the application stops for garbage collection; critical for maintaining application responsiveness.
+- **Throughput:** The proportion of time the application spends performing actual work rather than garbage collection.
+- **Heap Size Suitability:** The range of heap sizes for which the garbage collector performs efficiently.
 
 
 ## Question 6
@@ -214,11 +255,11 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 ## Question 7
 > `final` keyword
 
-| Modifier Context     | Purpose         |
-|----------------------|-----------------|
-| `final` with Fields  | Constant        |
-| `final` with Methods | Not overridable |
-| `final` with Classes | Not extendable  |
+| Modifier Context     | Purpose                                                                            |
+|----------------------|------------------------------------------------------------------------------------|
+| `final` with Fields  | Constant                                                                           |
+| `final` with Methods | Not overridable                                                                    |
+| `final` with Classes | Not extendable (fields **not** automatically final, methods **effectively** final) |
 
 
 ## Question 8
@@ -245,15 +286,19 @@ Garbage Collection is the process by which the Java Virtual Machine (**JVM**) **
 
 
 ## Question 10
-> Method signature and polymorphism
+> Method signature
 
 Java method signature consists of:
 - method name
 - parameter types (in order)
 
-| **Overloading**                                                   | **Overriding**     |
-|-------------------------------------------------------------------|--------------------|
-| Same method name, different param types (**different signature**) | **Same signature** |
+```java
+void foo(int x) { }
+int foo(int x) { }  // compile-time error
+
+// Return type is not part of method signature.
+// The compiler cannot distinguish between them based only on return type.
+```
 
 
 ## Question 11
@@ -307,15 +352,11 @@ A --> B --> C --> D
 
 
 ## Question 14
-> Polymorphism
-
-See [Question 1](#question-1), [Question 9](#question-9), [Question 10](#question-10).
+> [Polymorphism](#question-9)
 
 
 ## Question 15
-> Encapsulation
-
-Encapsulation refers to bundling data (variables) and methods that operate on that data into a single unit, known as a class.
+> [Encapsulation](#question-1)
 
 | **Benefit**                  | **Explanation**                                                      |
 |------------------------------|----------------------------------------------------------------------|
@@ -325,21 +366,19 @@ Encapsulation refers to bundling data (variables) and methods that operate on th
 | **Validation Control**       | Enforces validation rules on inputs via setters, ensuring integrity. |
 | **Ease of Maintenance**      | Facilitates changes and refactoring without breaking external code.  |
 
-For example, implementation, see [Question 1](#question-1).
-
 
 ## Question 16
 > Abstraction: Interface vs. Abstract Class
 
-| **Feature**          | **Interface**                                                   | **Abstract Class**                                  |
-|----------------------|-----------------------------------------------------------------|-----------------------------------------------------|
-| **Purpose**          | Defines a contract for implementing classes                     | Define a common base class for related classes      |
-| **Methods**          | All methods are implicitly **abstract** (until Java 8)          | Can have both **abstract** and **concrete** methods |
-| **Fields**           | Can only have `static final` fields (constants)                 | Can have instance variables (fields)                |
-| **Constructor**      | Can**not** have constructors                                    | Can have constructors                               |
-| **Access Modifiers** | Methods are `public` by default                                 | Methods can have any access modifiers               |
-| **Inheritance**      | A class can implement multiple interfaces                       | A class can only extend one abstract class          |
-| **Default Methods**  | From Java 8 onwards, can have **default methods** (with a body) | Can**not** have default methods                     |
+| **Feature**          | **Interface**                                                   | **Abstract Class**                                                             |
+|----------------------|-----------------------------------------------------------------|--------------------------------------------------------------------------------|
+| **Purpose**          | Defines a contract for implementing classes                     | Define a common base class for related classes                                 |
+| **Methods**          | All methods are implicitly **abstract** (until Java 8)          | Can have both **abstract** and **concrete** methods                            |
+| **Fields**           | Can only have `static final` fields (constants)                 | Can have **instance** variables (fields)                                       |
+| **Constructor**      | No                                                              | Yes, **but** no direct instantiation (called upon child class object creation) |
+| **Access Modifiers** | Methods are `public` by default                                 | Methods can have any access modifiers                                          |
+| **Inheritance**      | Implemented by **one or more** interfaces/classes               | Extended by **only one** class                                                 |
+| **Default Methods**  | From Java 8 onwards, can have **default methods** (with a body) | No default methods                                                             |
 
 
 ## Question 17
@@ -353,7 +392,7 @@ For example, implementation, see [Question 1](#question-1).
 - Optimized code can be recompiled later if runtime profiling changes.
 
 ### JIT Compilation
-Instead of compiling all bytecode beforehand, the JVM **monitors frequently invoked methods** and compiles them into native CPU instructions **just-in-time**.
+Instead of compiling all bytecode beforehand, the JVM **monitors frequently invoked methods** and compiles them into **native CPU instructions just-in-time**.
 
 Benefits:
 - Fast interpreter startup
