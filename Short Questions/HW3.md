@@ -1,16 +1,87 @@
 # Homework 3 — Java 8
 **Author: M. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [How to Prevent NPE](#question-5)
+2. [Java 8 New Features](#question-6)
+3. [Lambda can use unchanged variable outside](#question-10)
+4. [Functional Interface Inheritance](#question-11)
+5. [Intermediate & Terminal Operations in Stream API](#question-12)
+6. [`Collection` vs. `Stream`](#question-14)
+7. [Streams Under the Hood](#question-16)
+
+</details>
+
 ## Question 5
 > Best Practices to Prevent `NullPointerException` (NPE)
 
+1. Use `Objects.requireNonNull` for validation
+    ```java
+    public class Example {
+        private String name;
+        void setName(String name) {
+            this.name = Objects.requireNonNull(name, "name cannot be null");
+        }
+    }
+    ```
+2. Use `Optional` for return values that may be absent
+    ```java
+    public class Example {
+        Optional<String> findUser(int id) {
+            return id == 1 ? Optional.of("Alice") : Optional.empty();
+        }
+    }
+    ```
+
+3. Provide default values with `Objects.requireNonNullElse`
+    ```java
+    public class Example {
+        String greet(String name) {
+            return "Hello, " + Objects.requireNonNullElse(name, "Guest");
+        }
+    }
+    ```
+
+4. Use defensive copying for mutable inputs
+    ```java
+    public class Example {
+        private final List<String> hobbies;
+    
+        Example(List<String> hobbies) {
+            this.hobbies = new ArrayList<>(Objects.requireNonNull(hobbies));
+        }
+    }
+    ```
+
+5. Avoid returning `null` from methods
+    ```java
+    public class Example {
+        String[] getNames() {
+            return new String[0]; // return an empty array
+        }
+    }
+    ```
+
+6. Check before dereferencing
+    ```java
+    public class Example {
+        void printLength(String s) {
+            if (s != null) {
+                System.out.println(s.length());
+            }
+        }
+    }
+    ```
+
 ## Question 6
 > Main New Features in Java 8
-> - `default` & `static` methods in interfaces
-> - Functional Interface & Lambda Expression
-> - Method Reference
-> - `Optional` Class
-> - Stream API
+> - [`default` & `static` methods in interfaces](#1-default-and-static-methods-in-interfaces)
+> - [Functional Interface & Lambda Expression](#2-functional-interface--lambda-expression)
+> - [Method Reference](#3-method-reference)
+> - [`Optional` Class](#4-optional-class)
+> - [Stream API](#5-stream-api)
 
 ### 1. `default` and `static` methods in interfaces
 Java 8 allows interfaces to have `default` methods with implementations,
@@ -83,6 +154,8 @@ which abstract classes cannot provide.
 ### 2. Functional Interface & Lambda Expression
 A functional interface is an interface with a **single abstract method** (SAM).
 Lambda expressions provide **a concise way to implement** such interfaces.
+
+`default` methods and `static` methods do **not** count toward SAM.
 
 ```java
 @FunctionalInterface
@@ -234,19 +307,16 @@ public class Main {
 ```
 
 ## Question 7
-> Advantages of `Optional` Class
+> [Advantages of `Optional` Class](#4-optional-class)
 
-See [Question 6](#4-optional-class).
 
 ## Question 8
-> Explain functional interface and lambda expression with code.
+> [Explain functional interface and lambda expression with code](#2-functional-interface--lambda-expression)
 
-See [Question 6](#2-functional-interface--lambda-expression).
 
 ## Question 9
-> Explain method reference with code.
+> [Explain method reference with code](#3-method-reference)
 
-See [Question 6](#3-method-reference).
 
 ## Question 10
 > Lambda can use unchanged variable outside of lambda. Explain this with code.
