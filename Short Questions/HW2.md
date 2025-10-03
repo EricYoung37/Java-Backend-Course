@@ -1,6 +1,21 @@
 # Homework 2 — Collections & Exception Handling
 **Author: M. Yang**
 
+<details>
+<summary>Table of Contents</summary>
+
+1. [Checked Exception vs. Unchecked Exception](#question-2)
+2. [`catch` & `finally`](#question-4)
+3. [`throw` vs. `throws`](#question-5)
+4. [`catch` Ordering](#question-6)
+5. [`Optional`](#question-7)
+6. [Design Patterns](#question-8)
+7. [Singleton Pattern, Factory Pattern, Builder Pattern](#question-9)
+8. [SOLID Principles](#question-10)
+9. [`HashMap` vs `LinkedHashMap` vs `TreeMap`](#question-12)
+
+</details>
+
 ## Question 1
 See directory [Coding/HW2/Question1](../Coding/HW2/Question1).
 
@@ -9,13 +24,14 @@ See directory [Coding/HW2/Question1](../Coding/HW2/Question1).
 > Checked Exception vs. Unchecked Exception
 
 ### Comparison
-| Feature               | Checked Exception             | Unchecked Exception                                                        |
-|-----------------------|-------------------------------|----------------------------------------------------------------------------|
-| Inherits from         | `Exception`                   | `RuntimeException`                                                         |
-| Checked when?         | **Compile time**              | **Runtime**                                                                |
-| Must be caught/thrown | ✅ Yes                         | ❌ No                                                                       |
-| Common Examples       | `IOException`, `SQLException` | `NullPointerException`, `ArithmeticException`, `IndexOutOfBoundsException` |
-| Represents            | Recoverable situations        | Programming errors                                                         |
+| Feature               | Checked Exception                                                                                        | Unchecked Exception                                                        |
+|-----------------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| Description           | **Must be declared or handled** in the method (`throws` or `try-catch`) because the compiler enforces it | No need to be declared or handled                                          |
+| Inherits from         | `Exception`                                                                                              | `RuntimeException`                                                         |
+| Checked when?         | **Compile time**                                                                                         | **Runtime**                                                                |
+| Must be caught/thrown | Yes                                                                                                      | No                                                                         |
+| Common Examples       | `IOException`, `SQLException`                                                                            | `NullPointerException`, `ArithmeticException`, `IndexOutOfBoundsException` |
+| Represents            | Recoverable situations                                                                                   | Programming errors                                                         |
 
 ```mermaid
 graph TD
@@ -128,6 +144,7 @@ The oder of `catch block` in this question's example is correct:
 - Then catch **more general** exceptions (`RuntimeException`)
 - Finally, catch the **most general** ones (`Exception`)
 
+[Example](#question-3)
 
 ## Question 7
 > `Optional`
@@ -138,21 +155,25 @@ Using `Optional` helps to avoid **NullPointerException (NPE)** by enforcing an e
 rather than relying on `null`.
 
 ```java
-import java.util.Optional;
-
-public class Main {
+public class BooleanTest {
+    
+    private Boolean flag; // null (uninitialized)
+    
+    public boolean getFlag() {
+        // return flag; // This causes NPE if implicit unboxing null flag (Boolean → boolean)
+        return Optional.ofNullable(flag).orElse(false); // safe even if setFlag(null)
+        
+        // ofNullable(flag) returns Optional.empty() if null; otherwise Optional(flagValue)
+        // Optional.empty().orElse(false) returns false
+        // Optional(flagValue).orElse(false) returns flagValue
+    }
+    
+    public void setFlag(Boolean flag) { // param flag may be null
+        this.flag = flag;
+    }
+    
     public static void main(String[] args) {
-        String name = null;
-
-        // Using Optional to avoid NullPointerException (NPE)
-        Optional<String> optionalName = Optional.ofNullable(name);
-
-        // Safe operation with Optional
-        String result = optionalName
-                .map(String::toUpperCase)   // Convert to uppercase if present
-                .orElse("Default");         // Return "Default" if the value is absent
-
-        System.out.println(result);  // Output: Default
+        System.out.println(new BooleanTest().getFlag());
     }
 }
 ```
@@ -176,7 +197,7 @@ Some common creational patterns include:
 <details>
 <summary>Factory Method Pattern</summary>
 
-* Defines an interface for creating an object, but allows subclasses to alter the type of objects that will be created.
+* Defines an interface for creating an object, but allows subclasses to **alter the type of objects that will be created**.
 * Example: GUI toolkit (buttons, checkboxes) where subclasses decide the specific button type.
 
 </details>
@@ -192,7 +213,7 @@ Some common creational patterns include:
 <details>
 <summary>Builder Pattern</summary>
 
-* Allows for the step-by-step creation of complex objects. The builder pattern provides flexibility in constructing different representations of an object.
+* Allows for the **step-by-step** creation of complex objects. The builder pattern provides flexibility in constructing different representations of an object.
 * Example: Building a complex object like a meal, or constructing a configuration object.
 
 </details>
@@ -280,12 +301,12 @@ public class Singleton {
     }
 
     public static Singleton getInstance() {
-        if (instance == null) {                     // First check (no locking)
-            synchronized (Singleton.class) {
-                if (instance == null) {             // Second check (with locking)
+        if (instance == null) {                     // 1st check (no locking): returns quickly if no lock, avoid overhead
+            synchronized (Singleton.class) { // locked
+                if (instance == null) {             // 2nd check (with locking): ensure only 1 thread creates instance
                     instance = new Singleton();
                 }
-            }
+            } // unlocked
         }
         return instance;
     }
@@ -402,7 +423,7 @@ public class Main {
 
 
 ## Question 10
-> SOLID Principles and Open-Closed Principle (OCP)
+> SOLID Principles
 
 ### SOLID Principles
 The SOLID principles are a set of five design principles intended to make software more maintainable, scalable, and robust.
@@ -416,7 +437,8 @@ The SOLID principles are a set of five design principles intended to make softwa
 | D         | Dependency Inversion Principle  | Depend on abstractions, not concretions. High-level modules should not depend on low-level modules. |
 
 
-#### Open-Closed Principle (OCP)
+> Open-Closed Principle (OCP)
+> 
 > *Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.*
 
 This means that existing code should not be changed, but the behavior should be extendable to accommodate new requirements. This reduces the risk of introducing bugs in existing functionality and promotes maintainability.
@@ -424,7 +446,7 @@ This means that existing code should not be changed, but the behavior should be 
 
 ## Question 11
 > Liskov Substitution Principle (LSP)
-
+> 
 > *If class B is a subtype of class A, then object of type A may be substituted with any object of type B.*
 
 This means that if the object of type A can do something, the object of type B can also do it.
@@ -442,7 +464,7 @@ This means that if the object of type A can do something, the object of type B c
 | Null Keys                | 1 allowed                                                                                              | 1 allowed                                                                                      | Not allowed                                        |
 | Null Values              | Allowed                                                                                                | Allowed                                                                                        | Allowed                                            |
 | Thread Safety            | Not thread-safe                                                                                        | Not thread-safe                                                                                | Not thread-safe                                    |
-| Use Case                 | Fast lookups                                                                                           | Order preservation                                                                             | Sorted keys                                        |
+| Use Case                 | **Fast** lookups                                                                                       | Order **preservation**                                                                         | **Sorted** keys                                    |
 
 ### `HashMap` Structure
 ```mermaid
