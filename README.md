@@ -1,20 +1,20 @@
-# Chuwa 03/17/2025
+# Java Backend Notes
+**Author: M. Yang**
 
-* [x] [HW1](./Short%20Questions/HW1.md) - hw1-java&oop
-* [x] [HW2](./Short%20Questions/HW2.md) - hw21-exception&enum&collection
-* [x] [HW3](./Short%20Questions/HW3.md) - hw23-java8
-* [x] [HW4](./Short%20Questions/HW4.md) - hw24-multiThreading
-* [x] [HW5](./Short%20Questions/HW5.md) - hw30-DB&REST-APIs
-* [x] [HW6](./Short%20Questions/HW6.md) - hw40-springboot-post
-* [x] [HW7](./Short%20Questions/HW7.md) - hw41-springboot-CRUD
-* [x] [HW8](./Short%20Questions/HW8.md) - hw42-Spring-Data
-* [x] [HW9](./Short%20Questions/HW9.md) - hw43-Spring-Basic
-* [x] [HW10](./Short%20Questions/HW10.md) - hw44-Spring-MVC
-* [x] [HW11](./Short%20Questions/HW11.md) - hw45-SpringSecurity
-* [x] [HW12](./Short%20Questions/HW12.md) - hw46-testing
-* [x] [HW13](./Short%20Questions/HW13.md) - hw50-microservice
-* [x] [HW14](./Short%20Questions/HW14.md) - hw50-Kafka
-* [ ] [HW15](./Short%20Questions/HW15.md) - K8s
-* [x] [HW16](./Short%20Questions/HW16.md) - [Cassandra Quiz](https://forms.gle/dika3ddN4LNnMKAL6)
-* [ ] HW17 - JavaScript-related
-* [x] [HW18](./Short%20Questions/HW18.md) - System Design Demo
+1. [Java OOP](./Short%20Questions/HW1.md)
+2. [Collections & Exception Handling](./Short%20Questions/HW2.md)
+3. [Java 8](./Short%20Questions/HW3.md)
+4. [Multi-threading](./Short%20Questions/HW4.md)
+5. [REST APIs](./Short%20Questions/HW5.md)
+6. [Spring Boot Introduction](./Short%20Questions/HW6.md)
+7. [Spring Boot Data Pt. 1](./Short%20Questions/HW7.md)
+8. [Spring Boot Data Pt. 2](./Short%20Questions/HW8.md)
+9. [Spring Beans](./Short%20Questions/HW9.md)
+10. [Spring MVC](./Short%20Questions/HW10.md)
+11. [Spring Security](./Short%20Questions/HW11.md)
+12. [Testing](./Short%20Questions/HW12.md)
+13. [Microservices](./Short%20Questions/HW13.md)
+14. [Kafka](./Short%20Questions/HW14.md)
+15. [Kubernetes](./Short%20Questions/HW15.md)
+16. [Cassandra](./Short%20Questions/HW16.md)
+17. [System Design Demo](./Short%20Questions/HW18.md)
