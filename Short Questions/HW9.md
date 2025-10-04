@@ -30,6 +30,7 @@ See [Spring-Boot-Annotations.md](Spring-Boot-Annotations.md).
 | **Deployment Speed**        | More complex to use, requires more effort                                                                                        | **Simplified development**, quick to get started                                                                                                        |
 | **Use Case**                | Suitable for large, complex applications                                                                                         | **Ideal for microservices**                                                                                                                             |
 | **Embedded Server Support** | Requires an external server (e.g., Tomcat)                                                                                       | **Embedded web server** (e.g., Tomcat, Jetty)                                                                                                           |
+| **Version Relation**        | 3.x                                                                                                                              | 6.x                                                                                                                                                     |
 
 ※ In software development, particularly with frameworks like Spring Boot, "opinionated" refers to the framework
 having predefined configurations, conventions, and default behaviors

@@ -117,8 +117,9 @@ public class Main {
 ## Question 4
 > The final result for `catch` and `finally` blocks.
 
-When both `catch` and `finally` have return statements, the return value from `finally` takes precedence
-and overrides any return from `try` or `catch`.
+When both `catch` and `finally` blocks contain **return** statements or **throw** exceptions,
+the return value or exception from the `finally` block takes precedence,
+**overriding** any **return** value or **exception** from the `try` or `catch` blocks.
 
 
 ## Question 5

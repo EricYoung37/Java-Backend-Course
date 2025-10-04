@@ -480,7 +480,7 @@ Expected outputs (**no** deadlock in all cases):
 ## Question 9
 > Communication between threads
 
-### Use `Synchronized` and `wait()`, `notify()`, `notifyAll()`
+### Use `synchronized` and `wait()`, `notify()`, `notifyAll()`
 
 See [Question 10](#question-10) for explanation about `synchronized` instance methods (object lock).
 
@@ -523,7 +523,7 @@ class MessageBuffer {
     public synchronized void produce(String item) {
         buffer.add(item);
         System.out.println("Produced: " + item);
-        notify(); // wake up consumer if waiting
+        notify(); // wake up consumer if waiting (random thread)
     }
 
     public synchronized String consume() {
@@ -664,6 +664,14 @@ class VolatileExample {
     }
 }
 ```
+
+| **Aspect**      | **Regular Variable**                                     | **`volatile` Variable**                                             | **`synchronized`**                               |
+|-----------------|----------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------|
+| **Visibility**  | No guarantee across threads (**stale** values possible). | Guarantees visibility across threads (always **latest** value).     | Guarantees visibility.                           |
+| **Atomicity**   | No guarantee.                                            | No guarantee (only single read/write is safe).                      | Guarantees atomicity for critical sections.      |
+| **Ordering**    | Compiler/CPU may **reorder** operations.                 | **Prevents reordering** of reads/writes around `volatile` variable. | Prevents reordering within `synchronized` block. |
+| **Performance** | Fastest (no synchronization).                            | Lightweight (cheaper than synchronized, but some overhead).         | Heavier due to locking mechanism.                |
+| **Use Case**    | Thread-local or non-concurrent use.                      | Flags, state indicators, single-writer multiple-reader scenarios.   | When atomicity of compound actions is needed.    |
 
 
 ## Question 10
@@ -1335,7 +1343,7 @@ Thread starvation occurs when some threads **never get CPU time** because some *
 
 ### Causes
 1. Some threads keep re-enter a `synchronized` block, while other threads remain blocked forever trying to enter the block.
-2. The `notify()` method makes no guarantee about what thread is awakened if multiple thread have called `wait()`, and some threads remain waiting forever.
+2. The `notify()` method makes **no guarantee about what thread is awakened** if multiple thread have called `wait()`, and some threads remain waiting forever.
 
 ### Solutions
 1. Use `ReentrantLock` with fairness (`new ReentrantLock(true)`) to ensure the longest-waiting thread gets the lock first.

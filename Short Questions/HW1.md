@@ -6,7 +6,7 @@
 
 1. [Fundamental Concepts of Java OOP - A PIE](#question-1)
 2. [Wrapper Classes](#question-2)
-3. [`HashMap` vs. `HashTable`](#question-3)
+3. [`HashMap` vs. `ConcurrentHashMap` vs. `HashTable`](#question-3)
 4. [String Pool & String Immunity](#question-4)
 5. [GC Types](#question-5)
 6. [Access Modifiers](#question-6)
@@ -170,16 +170,15 @@ Wrappers allow you to represent "no value" (**null**) — useful in databases, A
 
 
 ## Question 3
-> `HashMap` vs. `HashTable`
+> `HashMap` vs. `ConcurrentHashMap` vs. `HashTable`
 
-| Feature                    | `HashMap`                                          | `HashTable`                                  |
-|----------------------------|----------------------------------------------------|----------------------------------------------|
-| **Thread Safety**          | ❌ Not synchronized (not thread-safe)               | ✅ Synchronized (thread-safe)                 |
-| **Performance**            | ✅ Faster (no synchronization overhead)             | ❌ Slower due to synchronization              |
-| **Null Keys/Values**       | ✅ Allows one `null` key and multiple `null` values | ❌ Does **not** allow any `null` key or value |
-| **Legacy Status**          | ✅ Part of Java Collections Framework               | ❗ Legacy class (pre-Java 1.2)                |
-| **Iterator Type**          | Fail-fast iterator                                 | Not fail-fast (less consistent)              |
-| **Preferred for New Code** | ✅ Recommended                                      | ❌ Avoid for new code                         |
+| Feature           | **HashMap**                      | **ConcurrentHashMap**            | **Hashtable**            |
+|-------------------|----------------------------------|----------------------------------|--------------------------|
+| **Thread Safety** | No                               | Yes (fine-grained locking)       | Yes (synchronized)       |
+| **Performance**   | Fast (single-thread)             | Fast under concurrency           | Slower (locks whole map) |
+| **Nulls**         | 1 null key, multiple null values | No nulls                         | No nulls                 |
+| **Iteration**     | Fail-fast                        | Weakly consistent                | Fail-fast                |
+| **Use Case**      | Single-threaded                  | Multi-threaded, high concurrency | Legacy code              |
 
 
 ## Question 4
