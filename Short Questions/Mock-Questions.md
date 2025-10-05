@@ -39,6 +39,7 @@
 - [HTTP Status Code](HW5.md#question-3)
 - [Sprint Routine](HW12.md#question-3)
 - [Software Development Environments](HW12.md#question-5)
+- [CI/CD Pipeline](HW12.md#question-7)
 - [Application Tiers](HW13.md#question-9)
 - [SQL/OLTP vs. NoSQL vs. OLAP](HW16.md#question-30)
 - [REST API vs. GraphQL](HW6.md#question-7)
